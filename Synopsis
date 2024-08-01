@@ -1,0 +1,26 @@
+EXPENSES TRACKER
+
+Introduction:
+
+To many young professionals earning their first salary, college students trying to get through college on a part-time job, or even professionals pushing themselves to invest, managing money can be a critical problem. They often overspend, putting themselves in a never-ending debt spiral. This project aims to help alleviate this problem by helping expense management with a user-friendly yet powerful tool. With the help of this app, many young salaried professionals can make aspirational purchases, like a car or their wedding, manage investments and so much more.
+Our tool will have several features such as tax breakdowns, debt monitors, residual income limits, and a simple input interface that can be automated through the built-in rest API. The main UI will contain graphs and charts to make the breakdowns more understandable to the user. The tool will use live stock market valuations to present a real-time overview of your portfolio's value.
+
+Hardware requirements:
+1. 2GB disc space
+2. 4GB RAM
+3. x86 or AMD core with atleast 1 GHz (64-bit)
+4. GPU (integrated or external)
+
+Software requirements:
+1. Couchbase (database)
+2. Excel
+3. Python 3 with:
+    MathPlotLib
+    Pandas
+    tkinter
+4. LINUX , MacOS Catalina or later or Windows 8 or later
+5. Reliable Internet Connection
+
+Project group members:
+1. Tushar Sudeep
+2. Darshan Melkote
