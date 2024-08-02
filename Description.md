@@ -12,6 +12,8 @@ Features of the project:
 10. Useful schemes to implement
 11. Real time Stock valuation
 12. Savings manager
+13. bank statements intergration (through csv downloaded from the bank)
+14. Credit score aproximator
 
 Imports required:
 1. MathPlotLib
