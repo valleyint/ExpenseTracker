@@ -1,0 +1,10 @@
+<!--This is the program for the html part-->
+<!DOCTYPE html>
+<html>
+   <title>
+        Expenses Tracker
+    </title>
+    <body style="background-color:rgba(67, 72, 100, 0.719);">
+        <h1><u>This is the part with the content.</u></h1>
+    </body>
+</html>
