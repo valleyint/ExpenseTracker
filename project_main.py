@@ -1,6 +1,8 @@
+#Imports
 import matplotlib.pyplot as plt
 import copy
 
+#Class
 class ExpenseTracker:
     def __init__(self):
         self.expenses = {}
@@ -77,6 +79,7 @@ class ExpenseTracker:
         difference = (self.totalincome-self.totalexpense)
         return difference
 
+#Pie Chart
 def pie_chart (exp) :
     expences = {}
     expences = copy.deepcopy(exp.expenses)
@@ -94,6 +97,7 @@ def pie_chart (exp) :
 
     plt.show()
 
+#Main
 def main():
     tracker = ExpenseTracker()
     while True:
@@ -125,6 +129,5 @@ def main():
             break
         else:
             print("Invalid option. Please choose again.")
-        
-if __name__ == "__main__":
-    main()
+
+main()
