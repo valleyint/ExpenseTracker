@@ -80,7 +80,7 @@ class ExpenseTracker:
         return difference
 
 #Pie Chart
-def pie_chart (exp) :
+def pie_chart_breakup (exp) :
     expences = {}
     expences = copy.deepcopy(exp.expenses)
     expences['residual_income'] = exp.get_residual_income()
@@ -97,11 +97,24 @@ def pie_chart (exp) :
 
     plt.show()
 
+def pie_chart (exp) :
+    labels = []
+    sizes = []
+
+    for x, y in exp.items() :
+        labels.append(x)
+        sizes.append(y)
+    
+    plt.style.use('_mpl-gallery-nogrid')
+    plt.pie(sizes, labels=labels)
+
+    plt.show()
+
 #Main
 def main():
     tracker = ExpenseTracker()
     while True:
-        print("\n1. Add Expense\n2. Remove Expense\n3. Update Expense\n4. Get Expense\n5. Get All Expenses\n6. Add Income\n7. Show chart\n8. Quit")
+        print("\n1. Add Expense\n2. Remove Expense\n3. Update Expense\n4. Get Expense\n5. Get All Expenses\n6. Add Income\n7. Show chart\n8. Get income graph\n9. Get expenditure graph\n10.Quit")
         choice = input("Choose an option: ")
         if choice == "1":
             name = input("Enter expense name: ")
@@ -124,8 +137,12 @@ def main():
             amount = float(input("Enter income: "))
             tracker.add_income(name,amount)
         elif choice == '7' :
-            pie_chart(tracker)
-        elif choice == "8":
+            pie_chart_breakup(tracker)
+        elif choice == '8' :
+            pie_chart(tracker.income)
+        elif choice == '9' :
+            pie_chart(tracker.expenses)
+        elif choice == "10":
             break
         else:
             print("Invalid option. Please choose again.")
