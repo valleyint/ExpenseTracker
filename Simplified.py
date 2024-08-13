@@ -1,0 +1,124 @@
+#EXPENSES TRACKER
+
+
+#Global Variables
+
+MainLoop = True
+expense_name = []
+expense_amount = []
+income_name = []
+income_amount = []
+
+
+#Defines
+
+def add(name, amount):
+    if income_or_expense == "Income":
+        if name in income_name:
+            income_amount[income_name.index(name)] += amount
+        else:
+            income_name.append(name)
+            income_amount.append(amount)
+    else:
+        if name in expense_name:
+            expense_amount[expense_name.index(name)] += amount
+        else:
+            expense_name.append(name)
+            expense_amount.append(amount)
+    print("Successfull added!\n")
+
+def remove(name):
+    if income_or_expense == "Income":
+        if name in income_name:
+            income_amount.remove(income_name.index(name))
+            income_name.remove(name)
+        else:
+            print("Income not found.")
+    else:
+        if name in expense_name:
+                expense_amount.remove(expense_name.index(name))
+                expense_name.remove(name)
+        else:
+            print("Expense not found.")
+    print("Successfully removed!\n")
+
+def update(name, amount):
+    if income_or_expense == "Income":
+        if name in income_name:
+            income_amount[income_name.index(name)] = amount
+        else:
+            print("Income not found.")
+    else:        
+        if name in expense_name:
+            expense_amount[expense_name.index(name)] = amount
+        else:
+            print("Expense not found.")
+    print(income_or_expense, "has been updated successfully.")
+
+def show(name):
+    if name in income_name or name in expense_name or name == "everything":
+        if income_or_expense == "Income":
+            if name == "everything":
+                print("-------------------------------------")
+                for i in range(len(income_name)):
+                    print(income_name, ":", income_amount)
+                print("-------------------------------------")
+
+            else:
+                print(name, ":", income_amount[income_name.index(name)])
+        else:
+            if name == "everything":
+                print("-------------------------------------")
+                for i in range(len(expense_name)):
+                    print(expense_name, ":", expense_amount)
+                print("-------------------------------------")
+
+            else:
+                print(name, ":", expense_amount[expense_name.index(name)])
+    else:
+        print(income_or_expense, "not found.")
+
+
+#Main code
+
+print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+print("WELCOME TO EXPENSES TRACKER\nOne place to manage all your expenses!")
+while MainLoop == True:
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+    while True:
+        income_or_expense = int(input("1. Income\n2. Expense\n3. Overall\n4. Graphs\n\nChoice: "))
+        if income_or_expense == 1:
+            income_or_expense = "Income"
+            break
+        elif income_or_expense == 2:
+            income_or_expense = "Expense"
+            break
+        else:
+            print("Error in input, please try again.")
+    while True:
+        choice = int(input(f"\nWhat would you like to do?\n1. Add {income_or_expense}\n2. Remove {income_or_expense}\n3. Update {income_or_expense}\n4. Get {income_or_expense}\n5. Get All {income_or_expense}\n6. Return\n7. Quit\n\nChoice: "))
+        print()
+        if choice == 1:
+            name = input(f"Enter {income_or_expense} name: ")
+            amount = float(input(f"Enter {income_or_expense} amount: "))
+            add(name, amount)
+        elif choice == 2:
+            name = input(f"Enter {income_or_expense} name: ")
+            remove(name)
+        elif choice == 3:
+            name = input(f"Enter {income_or_expense} name: ")
+            amount = float(input(f"Enter new {income_or_expense} amount: "))
+            update(name, amount)
+        elif choice == 4:
+            name = input(f"Enter {income_or_expense} name: ")
+            show(name)
+        elif choice == 5:
+            show("everything")
+        elif choice == 6:
+            break
+        elif choice == 7:
+            print("THANK YOU\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            MainLoop = False
+            break
+        else:
+            print("Invalid option. Please choose again.")
