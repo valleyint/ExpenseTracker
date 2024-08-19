@@ -1,6 +1,11 @@
 #EXPENSES TRACKER
 
 
+#Imports
+
+import tkinter as tk
+import matplotlib.pyplot as plot
+
 #Defines
 
 def variables():
@@ -108,6 +113,10 @@ def show(name):
     else:
         print(income_or_expense, "not found.")
 
+def pie_chart() :
+        plot.style.use('_mpl-gallery-nogrid')
+        plot.pie(x = expense_amount, labels = expense_name)
+        plot.show()
 
 #Main code
 
@@ -125,9 +134,11 @@ while Loops[0] == True:
         elif income_or_expense == "2":
             income_or_expense = "Expense"
             break
+        elif income_or_expense == "3":
+            pie_chart()
         else:
             print("Error in input, please try again.")
-    while Loops[1]:
+    while Loops[1] and (income_or_expense == "Income" or income_or_expense == "Expense"):
         choice = input(f"\nWhat would you like to do?\n1. Add {income_or_expense}\n2. Remove {income_or_expense}\n3. Update {income_or_expense}\n4. Get {income_or_expense}\n5. Get All {income_or_expense}\n6. Return\n7. Quit\n\nChoice: ")
         print()
         option()
