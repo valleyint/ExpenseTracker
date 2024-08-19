@@ -1,16 +1,19 @@
 #EXPENSES TRACKER
 
 
-#Global Variables
-
-Loops = [True, True]
-expense_name = []
-expense_amount = []
-income_name = []
-income_amount = []
-
-
 #Defines
+
+def variables():
+    global Loops
+    Loops = [True, True]
+    global income_name
+    income_name = []
+    global income_amount
+    income_amount = []
+    global expense_name
+    expense_name = []
+    global expense_amount
+    expense_amount = []
 
 def option():
     if choice in "1234567":
@@ -108,6 +111,7 @@ def show(name):
 
 #Main code
 
+variables()
 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 print("WELCOME TO EXPENSES TRACKER\nOne place to manage all your expenses!")
 while Loops[0] == True:
