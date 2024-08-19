@@ -3,91 +3,83 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 import copy
 
+class storeMap :
+    def __init__ (self) :
+        self.valarr = []
+        self.labelarr = []
+        self.total = 0
+    def add (self,name,amount) :
+        if name in self.labelarr:
+            raise Exception('label previously used in this map')
+        else:
+            self.labelarr.append(name)
+            self.valarr.append(amount)
+            self.total += amount
+    def remove (self,name) :
+        if name in self.labelarr :
+            pos = self.labelarr.index(name)
+            self.total -= self.valarr[pos]
+            self.valarr.remove(pos)
+            self.labelarr.remove(name)
+        else:
+            raise Exception("Income not found.")
+    def update (self,name,value) :
+        if name in self.labelarr :
+            self.valarr[self.labelarr.index(name)] = value
+        else:
+            raise Exception("Income not found.")
+    def get (self,name) :
+        if name in self.labelarr:
+            return self.valarr[self.labelarr.index(name)]
+        else:
+            raise Exception("Income not found.")
+    def getAll (self) :
+        str = ""
+        for loop in range(len(self.valarr)) :
+            str += self.labelarr[loop]
+            str += ','
+            str += self.valarr[loop]
+            str += '\n'
+        return str
+    def pie_chart (self) :
+        plt.style.use('_mpl-gallery-nogrid')
+        plt.pie(x = self.valarr, labels =self.labelarr)
+        plt.show()
+
 #Class
 class ExpenseTracker:
     def __init__(self):
-        self.expenses = {}
-        self.income = {}
-        self.totalincome = 0
-        self.totalexpense = 0
+        self.expense = storeMap()
+        self.income = storeMap()
+        #self.totalincome = 0
+        #self.totalexpense = 0
     def add_income (self, name, amount) :
-        self.totalincome += amount
-        if name in self.income:
-            self.income[name] += amount
-        else:
-            self.income[name] = amount
+        self.income.add(name,amount)
     def remove_income(self, name):
-        if name in self.income:
-            self.totalincome -= self.income[name]
-            del self.income[name]
-        else:
-            print("Income not found.")
+        self.income.remove(name)
     def update_income(self, name, amount):
-        if name in self.income:
-            self.totalincome -= self.income[name]
-            self.income[name] = amount
-            self.totalincome += amount
-        else:
-            print("Income not found.")
+        self.income.update(name,amount)
     def get_income (self, name):
-        if name in self.income:
-            return self.income[name]
-        else:
-            print("Income not found.")
+        self.income.get(name)
     def get_all_expenses(self):
-        return self.income
+        return self.income.getAll
     def add_expense(self, name, amount):
-        self.totalexpense += amount
-        if name in self.expenses:
-            self.expenses[name] += amount
-        else:
-            self.expenses[name] = amount
+        self.expense.add(name,amount)
     def remove_expense(self, name):
-        if name in self.expenses:
-            self.totalexpense -= self.expenses[name]
-            del self.expenses[name]
-        else:
-            print("Expense not found.")
+        self.expense.remove(name)
     def update_expense(self, name, amount):
-        if name in self.expenses:
-            self.totalincome -= self.income[name]
-            self.expenses[name] = amount
-            self.totalincome += amount
-        else:
-            print("Expense not found.")
+        self.expense.update(name,amount)
     def get_expense(self, name):
-        if name in self.expenses:
-            return self.expenses[name]
-        else:
-            print("Expense not found.")
+        return self.expense.get(name)
     def get_all_expenses(self):
-        return self.expenses
+        return self.expense
     def get_residual_income (self) :
-        difference = (self.totalincome-self.totalexpense)
-        return difference
-
-#Pie Charts
-def pie_chart_breakup (exp) :
-    expences = {}
-    expences = copy.deepcopy(exp.expenses)
-    expences['residual_income'] = exp.get_residual_income()
-    labels = []
-    sizes = []
-    for x, y in expences.items() :
-        labels.append(x)
-        sizes.append(y)
-    plt.style.use('_mpl-gallery-nogrid')
-    plt.pie(sizes, labels=labels)
-    plt.show()
-def pie_chart (exp) :
-    labels = []
-    sizes = []
-    for x, y in exp.items() :
-        labels.append(x)
-        sizes.append(y)
-    plt.style.use('_mpl-gallery-nogrid')
-    plt.pie(sizes, labels=labels)
-    plt.show()
+        return (self.income.total-self.expense.total)
+    #Pie Charts
+    def pie_chart_breakup (self) :
+        expences = copy.deepcopy(self.expense)
+        expences.add('residual income',self.get_residual_income())
+        expences.pie_chart()
 
 #Main
 def main():
@@ -117,11 +109,11 @@ def main():
             amount = float(input("Enter income: "))
             tracker.add_income(name, amount)
         elif choice == '7' :
-            pie_chart_breakup(tracker)
+            tracker.pie_chart_breakup()
         elif choice == '8' :
-            pie_chart(tracker.income)
+            tracker.income.pie_chart()
         elif choice == '9' :
-            pie_chart(tracker.expenses)
+            tracker.expense.pie_chart()
         elif choice == "10":
             print("THANK YOU\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             break
