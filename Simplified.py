@@ -5,20 +5,17 @@
 
 import tkinter as tk
 import matplotlib.pyplot as plot
+import csv
 
-#Defines
+#Global Variables
 
-def variables():
-    global Loops
-    Loops = [True, True]
-    global income_name
-    income_name = []
-    global income_amount
-    income_amount = []
-    global expense_name
-    expense_name = []
-    global expense_amount
-    expense_amount = []
+Loops = [True, True]
+income_name = ["salary1", "salary2", "salary3"]
+income_amount = [100.0, 300.0, 500.0]
+expense_name = ["food1", "food2", "food3"]
+expense_amount = [200.0, 400.0, 600.0]
+
+#Functions
 
 def option():
     if choice in "1234567":
@@ -113,21 +110,27 @@ def show(name):
     else:
         print(income_or_expense, "not found.")
 
-def pie_chart() :
-        plot.style.use('_mpl-gallery-nogrid')
-        plot.pie(x = expense_amount, labels = expense_name)
+def pie_chart(type) :
+        plot.style.use("dark_background")
+        if type == "1":
+            plot.pie(income_amount, labels = income_name, wedgeprops=dict(width=0.5))
+            plot.title("INCOME GRAPH")
+        elif type == "2":
+            plot.pie(expense_amount, labels = expense_name, wedgeprops=dict(width=0.5))
+            plot.title("EXPENSE GRAPH")
+        else:
+            print("Error")
         plot.show()
 
 #Main code
 
-variables()
 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 print("WELCOME TO EXPENSES TRACKER\nOne place to manage all your expenses!")
 while Loops[0] == True:
     Loops[1] = True
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
     while True:
-        income_or_expense = input("1. Income\n2. Expense\n3. Overall\n4. Graphs\n\nChoice: ")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+        income_or_expense = input("1. Income\n2. Expense\n3. Overall\n4. Graphs\n5. Quit\n\nChoice: ")
         if income_or_expense == "1":
             income_or_expense = "Income"
             break
@@ -135,10 +138,14 @@ while Loops[0] == True:
             income_or_expense = "Expense"
             break
         elif income_or_expense == "4":
-            pie_chart()
+            pie_chart(input("Do you wish to see:\n1. Income chart\n2. Expense chart\n\nChoice: "))
+        elif income_or_expense == "5":
+            print("\nTHANK YOU\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            Loops[0] = False
+            break
         else:
             print("Error in input, please try again.")
-    while Loops[1] and (income_or_expense == "Income" or income_or_expense == "Expense"):
+    while (Loops[1] == True) and (income_or_expense == "Income" or income_or_expense == "Expense") and (Loops[0] == True):
         choice = input(f"\nWhat would you like to do?\n1. Add {income_or_expense}\n2. Remove {income_or_expense}\n3. Update {income_or_expense}\n4. Get {income_or_expense}\n5. Get All {income_or_expense}\n6. Return\n7. Quit\n\nChoice: ")
         print()
         option()
