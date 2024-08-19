@@ -134,7 +134,7 @@ while Loops[0] == True:
         elif income_or_expense == "2":
             income_or_expense = "Expense"
             break
-        elif income_or_expense == "3":
+        elif income_or_expense == "4":
             pie_chart()
         else:
             print("Error in input, please try again.")
