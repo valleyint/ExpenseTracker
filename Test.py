@@ -1,36 +1,37 @@
-import tkinter as tk
-
-def main():
-    screen = tk.Tk()
-    label = tk.Label(screen, text = "Welcome to Expenses Tracker!")
-    button = tk.Button(screen, 
-                   text="Click Me", 
-                   command=button_clicked,
-                   activebackground = "", 
-                   activeforeground="white",
-                   anchor="center",
-                   bd=3,
-                   bg="lightgray",
-                   cursor="hand2",
-                   disabledforeground="gray",
-                   fg="black",
-                   font=("Arial", 12),
-                   height=2,
-                   highlightbackground="black",
-                   highlightcolor="green",
-                   highlightthickness=2,
-                   justify="center",
-                   overrelief="raised",
-                   padx=10,
-                   pady=5,
-                   width=15,
-                   wraplength=100)
-
-    button.pack(padx=20, pady=20)
-    label.pack()
-    screen.mainloop()
-
-def button_clicked():
-    print("Button was pressed.")
-
-main()
+from tkinter import *
+  
+  
+# text_update function 
+def text_updation(language): 
+    text.delete(0, END) 
+    text.insert(0, language) 
+  
+# create root window 
+root = Tk() 
+  
+# root window title and dimension 
+root.title("GeekForGeeks") 
+  
+# Set geometry (widthxheight) 
+root.geometry('400x400') 
+  
+# Entry Box 
+text = Entry(root, width=30, bg='White') 
+text.pack(pady=10) 
+  
+# create buttons 
+button_dict = {} 
+words = ["Python", "Java", "R", "JavaScript"] 
+for lang in words: 
+    
+    # pass each button's text to a function 
+    def action(x = lang):  
+        return text_updation(x) 
+        
+    # create the buttons  
+    button_dict[lang] = Button(root, text = lang, 
+                               command = action) 
+    button_dict[lang].pack(pady=10) 
+  
+# Execute Tkinter 
+root.mainloop()
