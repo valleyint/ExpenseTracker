@@ -8,8 +8,8 @@ class ExpenseTracker:
     def __init__(self, root):
         self.root = root
         self.root.title("Expense Tracker")
-        self.root.geometry("800x600")
-        self.root.config(bg="#f0f0f0")
+        self.root.geometry()
+        self.root.config(bg = "#404040")
 
         self.income_name = []
         self.income_amount = []
@@ -30,11 +30,11 @@ class ExpenseTracker:
         self.notebook.add(self.expense_tab, text="Expense")
         self.notebook.add(self.graph_tab, text="Graphs")
 
-        self.header_frame = tk.Frame(self.root, bg="#333333")
-        self.header_frame.pack(fill="x")
+        self.foot_frame = tk.Frame(self.root, bg="#000000")
+        self.foot_frame.pack(fill="x", anchor="n")
 
-        self.header_label = tk.Label(self.header_frame, text="Expense Tracker", bg="#333333", fg="#ffffff", font=("Arial", 18))
-        self.header_label.pack(pady=10)
+        self.foot_label = tk.Label(self.foot_frame, text="Expense Tracker", bg="#000000", fg="#eeeeee", font=("Arial", 18))
+        self.foot_label.pack(pady=10)
 
     def create_income_tab(self):
         income_tab = tk.Frame(self.notebook)
@@ -156,5 +156,6 @@ class ExpenseTracker:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.state("zoomed")
     app = ExpenseTracker(root)
     root.mainloop()

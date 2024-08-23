@@ -190,12 +190,11 @@ class ExpenseTracker:
         labels = [data[0] for data in self.expense_data]
         sizes = [data[1] for data in self.expense_data]
         explode = [0.1 if i == 0 else 0 for i in range(len(labels))]
-        fig, ax = plot.subplots()
-        ax.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%')
-        ax.axis('equal')
-        self.graph_canvas.draw()
+        plot.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%')
+        plot.show()
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.state("zoomed")
     app = ExpenseTracker(root)
     root.mainloop()
