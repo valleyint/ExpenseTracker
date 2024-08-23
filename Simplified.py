@@ -3,20 +3,26 @@
 
 #Imports
 
-import tkinter as tk
-from tkinter import ttk
+from tkinter import *
 import matplotlib.pyplot as plot
 
 #Class
 
 class ExpensesTracker():
 
-    def __init__(self):
+    def __init__(self, root):
+        self.root = root
         self.Loops = [True, True]
         self.income_name = ["salary1", "salary2", "salary3"]
         self.income_amount = [100.0, 300.0, 500.0]
         self.expense_name = ["food1", "food2", "food3"]
         self.expense_amount = [200.0, 400.0, 600.0]
+        self.root.title("Expenses Tracker")
+        self.root.state("zoomed")
+        bg = PhotoImage(file = "Jet.png")
+        canvas1 = Canvas(root, width = 160, height = 160)
+        canvas1.pack(fill = "both", expand = True) 
+        canvas1.create_image(0, 0, image = bg, anchor = "nw") 
         self.intro()
         
     def intro(self):
@@ -26,7 +32,7 @@ class ExpensesTracker():
             self.Loops[1] = True
             while True:
                 print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-                self.income_or_expense = input("1. Income\n2. Expense\n3. Overall\n4. Graphs\n5. Quit\n\nself.choice: ")
+                self.income_or_expense = input("1. Income\n2. Expense\n3. Overall\n4. Graphs\n5. Quit\n\nChoice: ")
                 if self.income_or_expense == "1":
                     self.income_or_expense = "Income"
                     break
@@ -34,7 +40,7 @@ class ExpensesTracker():
                     self.income_or_expense = "Expense"
                     break
                 elif self.income_or_expense == "4":
-                    self.pie_chart(input("Do you wish to see:\n1. Income chart\n2. Expense chart\n\nself.choice: "))
+                    self.pie_chart(input("Do you wish to see:\n1. Income chart\n2. Expense chart\n\nChoice: "))
                 elif self.income_or_expense == "5":
                     print("\nTHANK YOU\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                     self.Loops[0] = False
@@ -42,7 +48,7 @@ class ExpensesTracker():
                 else:
                     print("Error in input, please try again.")
             while (self.Loops[1] == True) and (self.income_or_expense == "Income" or self.income_or_expense == "Expense") and (self.Loops[0] == True):
-                self.choice = input(f"\nWhat would you like to do?\n1. Add {self.income_or_expense}\n2. Remove {self.income_or_expense}\n3. Update {self.income_or_expense}\n4. Get {self.income_or_expense}\n5. Get All {self.income_or_expense}\n6. Return\n7. Quit\n\nself.choice: ")
+                self.choice = input(f"\nWhat would you like to do?\n1. Add {self.income_or_expense}\n2. Remove {self.income_or_expense}\n3. Update {self.income_or_expense}\n4. Get {self.income_or_expense}\n5. Get All {self.income_or_expense}\n6. Return\n7. Quit\n\nChoice: ")
                 print()
                 self.option()
 
@@ -153,7 +159,6 @@ class ExpensesTracker():
 
 #Main code
 
-root = tk.Tk()
-root.state("zoomed")
-app = ExpensesTracker()
+root = Tk()
+app = ExpensesTracker(root)
 root.mainloop()
