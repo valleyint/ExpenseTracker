@@ -4,6 +4,7 @@
 #Imports
 
 from tkinter import *
+from tkinter import ttk
 import matplotlib.pyplot as plot
 
 #Class
@@ -17,40 +18,41 @@ class ExpensesTracker():
         self.income_amount = [100.0, 300.0, 500.0]
         self.expense_name = ["food1", "food2", "food3"]
         self.expense_amount = [200.0, 400.0, 600.0]
+        self.button_names = ["INCOME", "EXPENSE", "GRAPHS", "QUIT"]
+        self.button_list = []
+        self.income_or_expense = ""
         self.root.title("Expenses Tracker")
+        self.root.config(bg = "#333333")
         self.root.state("zoomed")
-        bg = PhotoImage(file = "Jet.png")
-        canvas1 = Canvas(root, width = 160, height = 160)
-        canvas1.pack(fill = "both", expand = True) 
-        canvas1.create_image(0, 0, image = bg, anchor = "nw") 
         self.intro()
         
     def intro(self):
-        print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print("WELCOME TO EXPENSES TRACKER\nOne place to manage all your expenses!")
-        while self.Loops[0] == True:
-            self.Loops[1] = True
-            while True:
-                print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-                self.income_or_expense = input("1. Income\n2. Expense\n3. Overall\n4. Graphs\n5. Quit\n\nChoice: ")
-                if self.income_or_expense == "1":
-                    self.income_or_expense = "Income"
-                    break
-                elif self.income_or_expense == "2":
-                    self.income_or_expense = "Expense"
-                    break
-                elif self.income_or_expense == "4":
-                    self.pie_chart(input("Do you wish to see:\n1. Income chart\n2. Expense chart\n\nChoice: "))
-                elif self.income_or_expense == "5":
-                    print("\nTHANK YOU\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-                    self.Loops[0] = False
-                    break
-                else:
-                    print("Error in input, please try again.")
-            while (self.Loops[1] == True) and (self.income_or_expense == "Income" or self.income_or_expense == "Expense") and (self.Loops[0] == True):
-                self.choice = input(f"\nWhat would you like to do?\n1. Add {self.income_or_expense}\n2. Remove {self.income_or_expense}\n3. Update {self.income_or_expense}\n4. Get {self.income_or_expense}\n5. Get All {self.income_or_expense}\n6. Return\n7. Quit\n\nChoice: ")
-                print()
-                self.option()
+        self.notebook = ttk.Notebook(root)
+        self.frame = ttk.Frame(self.notebook)
+        self.create_buttons()
+        self.frame.pack(padx = 5, pady = 5)
+        self.notebook.add(self.frame)
+        self.notebook.pack(padx = 5, pady = 5)
+        while (self.Loops[1] == True) and (self.income_or_expense == "Income" or self.income_or_expense == "Expense") and (self.Loops[0] == True):
+            self.choice = input(f"\nWhat would you like to do?\n1. Add {self.income_or_expense}\n2. Remove {self.income_or_expense}\n3. Update {self.income_or_expense}\n4. Get {self.income_or_expense}\n5. Get All {self.income_or_expense}\n6. Return\n7. Quit\n\nChoice: ")
+            print()
+            self.option()
+
+    def button_command(self, num):
+        if num == 0:
+            self.income_or_expense = "Income"
+            self.button_names[0] == "blah"
+        elif num == 1:
+            self.income_or_expense = "Expense"
+        elif num == 2:
+            self.pie_chart(input("Do you wish to see:\n1. Income chart\n2. Expense chart\n\nChoice: "))
+        else:
+            root.destroy()
+
+    def create_buttons(self):
+        for i in range(len(self.button_names)):
+            self.button_list.append(Button(self.frame, text = self.button_names[i], command = lambda: self.button_command(frozenset(i))))
+            self.button_list[i].pack(padx = 5, pady = 5)
 
     def option(self):
         if self.choice in "1234567":
