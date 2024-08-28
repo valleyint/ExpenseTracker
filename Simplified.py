@@ -5,7 +5,6 @@
 
 import tkinter
 import ttkbootstrap as ttkb
-#from tkinter import ttk
 import matplotlib.pyplot as plot
 
 #Class
@@ -14,7 +13,6 @@ class ExpensesTracker():
 
     def __init__(self, root):
         self.root = root
-        self.Loops = [True, True]
         self.income_name = ["salary1", "salary2", "salary3"]
         self.income_amount = [100.0, 300.0, 500.0]
         self.expense_name = ["food1", "food2", "food3"]
@@ -29,7 +27,7 @@ class ExpensesTracker():
     def intro(self):
         self.stly = ttkb.Style()
         self.frame1 = ttkb.Frame(self.root)
-        self.label1 = ttkb.Label(self.frame1, text = "EXPENSES TRACKER", anchor = "n")
+        self.label1 = ttkb.Label(self.frame1, text= "EXPENSES TRACKER", font = ("Helvetica", 28), bootstyle = "cosmo", anchor = "n")
         self.label1.pack(pady = 50)
         self.frame1.pack(anchor = "n", fill = "x")
         self.frame2 = ttkb.Frame(self.root)
@@ -40,8 +38,8 @@ class ExpensesTracker():
         for j in range(len(self.button_list), 0, -1):
             self.button_list[j-1].destroy()
             self.button_list.pop()
-        for i in range(1, len(self.button_names)+1):
-            self.button_list.append(ttkb.Button(self.frame2, text = self.button_names[i-1], command = lambda i=i: self.button_command(str(self.button_names[0]), i), bootstyle = ("warning", "outline")))
+        for i in range(1, len(self.button_names)):
+            self.button_list.append(ttkb.Button(self.frame2, text = self.button_names[i], command = lambda i=i: self.button_command(str(self.button_names[0]), i), bootstyle = ("warning", "outline")))
             self.button_list[i-1].pack(side = "left", padx = 100, pady = 5)    
 
     def button_command(self, seq, num):
@@ -74,33 +72,6 @@ class ExpensesTracker():
             else:
                 name = input("Enter income name: ")
                 self.show(name)
-
-    def option(self):
-        if self.choice in "1234567":
-            if self.choice == "1":
-                name = input(f"Enter {self.income_or_expense} name: ")
-                amount = float(input(f"Enter {self.income_or_expense} amount: "))
-                self.add(name, amount)
-            elif self.choice == "2":
-                name = input(f"Enter {self.income_or_expense} name: ")
-                self.remove(name)
-            elif self.choice == "3":
-                name = input(f"Enter {self.income_or_expense} name: ")
-                amount = float(input(f"Enter new {self.income_or_expense} amount: "))
-                self.update(name, amount)
-            elif self.choice == "4":
-                name = input(f"Enter {self.income_or_expense} name: ")
-                self.show(name)
-            elif self.choice == "5":
-                self.show("everything")
-            elif self.choice == "6":
-                self.Loops[1] = False
-            else:
-                print("THANK YOU\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-                self.Loops[0] = False
-                self.Loops[1] = False
-        else:
-            print("Invalid option. Please choose again.")
 
     def add(self, name, amount):
         if self.income_or_expense == "Income":
