@@ -3,8 +3,9 @@
 
 #Imports
 
-from tkinter import *
-from tkinter import ttk
+import tkinter
+import ttkbootstrap as ttkb
+#from tkinter import ttk
 import matplotlib.pyplot as plot
 
 #Class
@@ -22,37 +23,42 @@ class ExpensesTracker():
         self.button_list = []
         self.income_or_expense = ""
         self.root.title("Expenses Tracker")
-        self.root.config(bg = "#333333")
         self.root.state("zoomed")
         self.intro()
         
     def intro(self):
-        self.notebook = ttk.Notebook(root)
-        self.frame = ttk.Frame(self.notebook)
+        self.stly = ttkb.Style()
+        self.frame1 = ttkb.Frame(self.root)
+        self.label1 = ttkb.Label(self.frame1, text = "EXPENSES TRACKER", anchor = "n")
+        self.label1.pack(pady = 50)
+        self.frame1.pack(anchor = "n", fill = "x")
+        self.frame2 = ttkb.Frame(self.root)
         self.create_buttons()
-        self.frame.pack(padx = 5, pady = 5)
-        self.notebook.add(self.frame)
-        self.notebook.pack(padx = 5, pady = 5)
+        self.frame2.pack(anchor = "n", fill = "x")
         while (self.Loops[1] == True) and (self.income_or_expense == "Income" or self.income_or_expense == "Expense") and (self.Loops[0] == True):
             self.choice = input(f"\nWhat would you like to do?\n1. Add {self.income_or_expense}\n2. Remove {self.income_or_expense}\n3. Update {self.income_or_expense}\n4. Get {self.income_or_expense}\n5. Get All {self.income_or_expense}\n6. Return\n7. Quit\n\nChoice: ")
             print()
             self.option()
 
     def button_command(self, num):
-        if num == 0:
-            self.income_or_expense = "Income"
-            self.button_names[0] == "blah"
-        elif num == 1:
-            self.income_or_expense = "Expense"
-        elif num == 2:
-            self.pie_chart(input("Do you wish to see:\n1. Income chart\n2. Expense chart\n\nChoice: "))
-        else:
-            root.destroy()
+            if num == 0:
+                self.income_or_expense = "Income"
+                self.button_names = ["Blah1", "REMOVE INCOME", "UPDATE INCOME", "GET INCOME"]
+                self.create_buttons()
+            elif num == 1:
+                self.income_or_expense = "Expense"
+            elif num == 2:
+                self.pie_chart(input("Do you wish to see:\n1. Income chart\n2. Expense chart\n\nChoice: "))
+            else:
+                root.destroy()
 
     def create_buttons(self):
+        for j in range(len(self.button_list), 0, -1):
+            self.button_list[j-1].destroy()
+            self.button_list.pop()
         for i in range(len(self.button_names)):
-            self.button_list.append(Button(self.frame, text = self.button_names[i], command = lambda: self.button_command(frozenset(i))))
-            self.button_list[i].pack(padx = 5, pady = 5)
+            self.button_list.append(ttkb.Button(self.frame2, text = self.button_names[i], command = lambda i=i: self.button_command(i), bootstyle = ("warning", "outline")))
+            self.button_list[i].pack(side = "left", padx = 200, pady = 5)
 
     def option(self):
         if self.choice in "1234567":
@@ -147,7 +153,8 @@ class ExpensesTracker():
         else:
             print(self.income_or_expense, "not found.")
 
-    def pie_chart(self, type) :
+    def pie_chart(self, type):
+            self.canvas = ttkb.Canvas()
             plot.style.use("dark_background")
             if type == "1":
                 plot.pie(self.income_amount, labels = self.income_name, wedgeprops=dict(width=0.5))
@@ -158,9 +165,10 @@ class ExpensesTracker():
             else:
                 print("Error")
             plot.show()
+            self.canvas.pack()
 
 #Main code
 
-root = Tk()
+root = ttkb.Window(themename = "darkly")
 app = ExpensesTracker(root)
 root.mainloop()
