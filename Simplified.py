@@ -19,7 +19,7 @@ class ExpensesTracker():
         self.income_amount = [100.0, 300.0, 500.0]
         self.expense_name = ["food1", "food2", "food3"]
         self.expense_amount = [200.0, 400.0, 600.0]
-        self.button_names = ["INCOME", "EXPENSE", "GRAPHS", "QUIT"]
+        self.button_names = [0, "INCOME", "EXPENSE", "GRAPHS", "QUIT"]
         self.button_list = []
         self.income_or_expense = ""
         self.root.title("Expenses Tracker")
@@ -35,30 +35,45 @@ class ExpensesTracker():
         self.frame2 = ttkb.Frame(self.root)
         self.create_buttons()
         self.frame2.pack(anchor = "n", fill = "x")
-        while (self.Loops[1] == True) and (self.income_or_expense == "Income" or self.income_or_expense == "Expense") and (self.Loops[0] == True):
-            self.choice = input(f"\nWhat would you like to do?\n1. Add {self.income_or_expense}\n2. Remove {self.income_or_expense}\n3. Update {self.income_or_expense}\n4. Get {self.income_or_expense}\n5. Get All {self.income_or_expense}\n6. Return\n7. Quit\n\nChoice: ")
-            print()
-            self.option()
-
-    def button_command(self, num):
-            if num == 0:
-                self.income_or_expense = "Income"
-                self.button_names = ["Blah1", "REMOVE INCOME", "UPDATE INCOME", "GET INCOME"]
-                self.create_buttons()
-            elif num == 1:
-                self.income_or_expense = "Expense"
-            elif num == 2:
-                self.pie_chart(input("Do you wish to see:\n1. Income chart\n2. Expense chart\n\nChoice: "))
-            else:
-                root.destroy()
 
     def create_buttons(self):
         for j in range(len(self.button_list), 0, -1):
             self.button_list[j-1].destroy()
             self.button_list.pop()
-        for i in range(len(self.button_names)):
-            self.button_list.append(ttkb.Button(self.frame2, text = self.button_names[i], command = lambda i=i: self.button_command(i), bootstyle = ("warning", "outline")))
-            self.button_list[i].pack(side = "left", padx = 200, pady = 5)
+        for i in range(1, len(self.button_names)+1):
+            self.button_list.append(ttkb.Button(self.frame2, text = self.button_names[i-1], command = lambda i=i: self.button_command(str(self.button_names[0]), i), bootstyle = ("warning", "outline")))
+            self.button_list[i-1].pack(side = "left", padx = 100, pady = 5)    
+
+    def button_command(self, seq, num):
+        if seq == "0":
+            if num == 1:
+                self.income_or_expense = "Income"
+                self.button_names = [1, "↩", "ADD INCOME", "REMOVE INCOME", "UPDATE INCOME", "GET INCOME"]
+                self.create_buttons()
+            elif num == 2:
+                self.income_or_expense = "Expense"
+            elif num == 3:
+                self.pie_chart(input("Do you wish to see:\n1. Income chart\n2. Expense chart\n\nChoice: "))
+            else:
+                root.destroy()
+        if seq == "1":
+            if num == 1:
+                self.button_names = [0, "INCOME", "EXPENSE", "GRAPHS", "QUIT"]
+                self.create_buttons()
+            elif num == 2:
+                name = input("Enter income name: ")
+                amount = float(input("Enter income amount: "))
+                self.add(name, amount)
+            elif num == 3:
+                name = input("Enter income name: ")
+                self.remove(name)
+            elif num == 4:
+                name = input("Enter income name: ")
+                amount = float(input("Enter new income amount: "))
+                self.update(name, amount)
+            else:
+                name = input("Enter income name: ")
+                self.show(name)
 
     def option(self):
         if self.choice in "1234567":
