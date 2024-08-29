@@ -15,7 +15,8 @@ class ExpensesTracker():
         self.root.title("Expenses Tracker")
         self.root.state("zoomed")
         self.root.configure(background = "black")
-        self.incomes = [["salary1", 100.0], ["salary2", 300.0], ["salary3", 500.0]]
+        self.income_name = ["salary1", "salary2", "salary3"]
+        self.income_amount = [100.0, 300.0, 500.0]
         self.expense_name = ["food1", "food2", "food3"]
         self.expense_amount = [200.0, 400.0, 600.0]
         self.buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["GRAPHS", 0], ["QUIT", 0]]
@@ -170,7 +171,7 @@ class ExpensesTracker():
     def pie_chart(self, type):
             plot.style.use("dark_background")
             if type == 2:
-                plot.pie(self.income_amount, labels = self.income[0][0], wedgeprops=dict(width=0.5))
+                plot.pie(self.income_amount, labels = self.income_name, wedgeprops=dict(width=0.5))
                 plot.title("INCOME GRAPH")
             if type == 3:
                 plot.pie(self.expense_amount, labels = self.expense_name, wedgeprops=dict(width=0.5))
