@@ -42,7 +42,7 @@ class ExpensesTracker():
     def create_buttons(self):
         for i in range(1, len(self.buttons)):
             self.buttons[i][1] = tk.Button(self.frame2, text = self.buttons[i][0], command = lambda i=i: self.button_command(self.buttons[0], i))
-            self.buttons[i][1].pack(side = "left", padx = ((self.width)/(len(self.buttons)*2)), pady = 5)    
+            self.buttons[i][1].pack(side = "left", padx = 100, pady = 5)    
 
     def button_command(self, seq, num):
         if seq == 1:
