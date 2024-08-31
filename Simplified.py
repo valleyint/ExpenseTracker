@@ -30,13 +30,13 @@ class ExpensesTracker():
         self.frame2 = tk.Frame(self.root, bg = "black")
         self.entry = tk.Entry(self.root)
         self.create_buttons()
-        self.frame2.pack(pady = 40)
+        self.frame2.pack(anchor = "nw", pady = 40)
 
     def create_buttons(self):
         for i in range(1, len(self.buttons)):
             self.buttons[i][1] = tk.Button(self.frame2, text = self.buttons[i][0], command = lambda i=i: self.button_command(self.buttons[0], i), padx = 10, pady = 5, width = 10)
             self.buttons[i][1].grid(row = 0, column = i, padx = 50)
-            self.buttons[i][1].grid_columnconfigure(index=i, weight=0,uniform="Silent_Creme")   
+    
     def delete_buttons(self):
         for i in range(len(self.buttons), 1, -1):
             if isinstance(self.buttons[i-1][1], tk.Button):
