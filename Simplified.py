@@ -6,6 +6,7 @@
 import tkinter as tk
 import matplotlib.pyplot as plot
 import time
+from PIL import Image, ImageTk
 
 #Class
 
@@ -15,26 +16,28 @@ class ExpensesTracker():
         self.root = root
         self.root.title("Expenses Tracker")
         self.root.state("zoomed")
-        self.root.config(background = "black")
+        self.root.config(background = "#2C323A")
         self.incomes = [["salary1", "salary2", "salary3"], [100.0, 300.0, 500.0]]
         self.expenses = [["food1", "food2", "food3"], [200.0, 400.0, 600.0]]
         self.buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["GRAPHS", 0], ["QUIT", 0]]
         self.income_or_expense = ""
+        self.img1, self.img2 = Image.open("Header.png"), Image.open("Frame2.png")  
+        self.img1 = ImageTk.PhotoImage(self.img1)
         self.intro()
         
     def intro(self):
-        self.frame1 = tk.Frame(self.root, bg = "#222222")
-        self.label_header = tk.Label(self.frame1, text= "EXPENSES TRACKER", font = ("Broadway", 46), anchor = "n", bg = "#222222", fg = "#ffffff")
-        self.label_header.pack(pady = 15)
+        self.frame1 = tk.Frame(self.root)
+        self.label_header = tk.Label(self.frame1, image = self.img1, bg = "#2C323A")
+        self.label_header.pack()
         self.frame1.pack(anchor = "n", fill = "x")
-        self.frame2 = tk.Frame(self.root, bg = "black")
+        self.frame2 = tk.Frame(self.root, bg = "#2C323A")
         self.entry = tk.Entry(self.root)
         self.create_buttons()
         self.frame2.pack(anchor = "nw", pady = 40)
 
     def create_buttons(self):
         for i in range(1, len(self.buttons)):
-            self.buttons[i][1] = tk.Button(self.frame2, text = self.buttons[i][0], command = lambda i=i: self.button_command(self.buttons[0], i), padx = 10, pady = 5, width = 10)
+            self.buttons[i][1] = tk.Button(self.frame2, text = self.buttons[i][0], command = lambda i=i: self.button_command(self.buttons[0], i), padx = 10, pady = 5, width = 15, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23")
             self.buttons[i][1].grid(row = 0, column = i, padx = 50)
     
     def delete_buttons(self):
