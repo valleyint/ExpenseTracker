@@ -21,7 +21,7 @@ class ExpensesTracker():
         self.expenses = [["food1", "food2", "food3"], [200.0, 400.0, 600.0]]
         self.buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["GRAPHS", 0], ["QUIT", 0]]
         self.income_or_expense = ""
-        self.img1, self.img2 = Image.open("Header.png"), Image.open("Frame2.png")  
+        self.img1 = Image.open("Header.png") 
         self.img1 = ImageTk.PhotoImage(self.img1)
         self.intro()
         
