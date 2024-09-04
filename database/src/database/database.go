@@ -12,7 +12,7 @@ type Db struct {
 }
 
 type Income struct {
-	gorm.Model
+	//gorm.Model
 	Tm    time.Time `gorm:"primaryKey"`
 	Name  string    `gorm:"primaryKey"`
 	Value float64
@@ -20,14 +20,14 @@ type Income struct {
 }
 
 type Expense struct {
-	gorm.Model
+	//gorm.Model
 	Tm    time.Time `gorm:"primaryKey"`
 	Name  string    `gorm:"primaryKey"`
 	Value float64
 	// incomes []*income `gorm:"many2many:income_expenses;"`
 }
 
-func CreateFianances() (*Db, error) {
+func CreateFianances () (*Db, error) {
 	d := Db{}
 	var err error
 
@@ -41,21 +41,38 @@ func CreateFianances() (*Db, error) {
 	return &d, nil
 }
 
-func (d *Db) AddIncome(i Income) {
+func (d *Db) AddIncome (i Income) {
 	d.db.Create(&i)
 }
 
-func (d *Db) AddExpense(e Expense) {
+func (d *Db) AddExpense (e Expense) {
 	d.db.Create(&e)
 }
 
-func (d *Db) GetAtTime(tm time.Time) ([]Income, []Expense) {
+func (d *Db) GetAllIncome () []Income {
 	var incomes []Income
-	d.db.Raw("SELECT tm, name, value FROM incomes WHERE tm = ?", tm).Scan(&Income{})
-
-	var expenses []Expense
-	d.db.Raw("SELECT tm, name, value FROM expenses WHERE tm = ?", tm).Scan(&Expense{})
-
-	return incomes, expenses
+	d.db.Raw("SELECT tm, name, value FROM incomes").Scan(&incomes)
+	return incomes
 }
 
+func (d *Db) GetAllExpence () []Expense {
+	var expences []Expense
+	d.db.Raw("SELECT tm, name, value FROM expenses").Scan(&expences)
+	return expences
+}
+
+func (d *Db) GetIncomeAtTime (tm time.Time) []Income {
+	var incomes []Income
+	d.db.Raw("SELECT tm, name, value FROM incomes WHERE Tm = ?;", tm).Scan(&incomes)
+	return incomes
+}
+
+func (d *Db) GetExpenseAtTime (tm time.Time) []Expense {
+	var expenses []Expense
+	d.db.Raw("SELECT tm, name, value FROM expenses WHERE tm = ?", tm).Scan(&expenses)
+	return expenses
+}
+
+func (d *Db) GetAtTime (tm time.Time) ([]Income, []Expense) {
+	return d.GetIncomeAtTime(tm), d.GetExpenseAtTime(tm)
+}
