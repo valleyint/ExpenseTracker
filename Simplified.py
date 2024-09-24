@@ -21,7 +21,7 @@ class ExpensesTracker():
         self.expenses = [["food1", "food2", "food3"], [200.0, 400.0, 600.0]]
         self.buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["GRAPHS", 0], ["QUIT", 0]]
         self.income_or_expense = ""
-        self.img1 = Image.open("Header.png") 
+        self.img1 = Image.open("Header.png")
         self.img1 = ImageTk.PhotoImage(self.img1)
         self.intro()
         
@@ -30,7 +30,7 @@ class ExpensesTracker():
         self.label_header = tk.Label(self.frame1, image = self.img1, bg = "#2C323A")
         self.label_header.pack()
         self.frame1.pack(anchor = "n", fill = "x")
-        self.frame2 = tk.Frame(self.root, bg = "#2C323A")
+        self.frame2 = tk.Frame(self.root, bg = "#2C323A", )
         self.entry = tk.Entry(self.root)
         self.create_buttons()
         self.frame2.pack(anchor = "nw", pady = 40)
@@ -52,23 +52,23 @@ class ExpensesTracker():
                 self.income_or_expense = "Income"
                 self.delete_buttons()
                 self.buttons = [11, ["↩", 0], ["ADD INCOME", 0], ["REMOVE INCOME", 0], ["UPDATE INCOME", 0], ["GET INCOME", 0]]
-                self.frame3 = tk.Frame(self.root, bg = "black")
-                self.label1 = tk.Label(self.frame3)
-                self.label2 = tk.Label(self.frame3)
-                self.entry1 = tk.Entry(self.frame3)
-                self.entry2 = tk.Entry(self.frame3)
-                self.button1 = tk.Button(self.frame3, text = "Submit")
+                self.frame3 = tk.Frame(self.root, bg = "#2C323A", relief = tk.GROOVE)
+                self.label1 = tk.Label(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.label2 = tk.Label(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.entry1 = tk.Entry(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.entry2 = tk.Entry(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.button1 = tk.Button(self.frame3, text = "Submit", width = 15, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23")
                 self.create_buttons()
             elif num == 2:
                 self.income_or_expense = "Expense"
                 self.delete_buttons()
                 self.buttons = [12, ["↩", 0], ["ADD EXPENSE", 0], ["REMOVE EXPENSE", 0], ["UPDATE EXPENSE", 0], ["GET EXPENSE", 0]]
-                self.frame3 = tk.Frame(self.root, bg = "black")
-                self.label1 = tk.Label(self.frame3)
-                self.label2 = tk.Label(self.frame3)
-                self.entry1 = tk.Entry(self.frame3)
-                self.entry2 = tk.Entry(self.frame3)
-                self.button1 = tk.Button(self.frame3, text = "Submit")
+                self.frame3 = tk.Frame(self.root, bg = "#2C323A")
+                self.label1 = tk.Label(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.label2 = tk.Label(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.entry1 = tk.Entry(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB", insertbackground = "#F2DFCB")
+                self.entry2 = tk.Entry(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB", insertbackground = "#F2DFCB")
+                self.button1 = tk.Button(self.frame3, text = "Submit", width = 15, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23")
                 self.create_buttons()
             elif num == 3:
                 self.delete_buttons()
@@ -93,6 +93,8 @@ class ExpensesTracker():
                 self.button1.grid(row = 2, column = 0)
                 self.frame3.pack()
             elif num == 3:
+                self.label2.grid_forget()
+                self.entry2.grid_forget()
                 self.label1.config(text = f"Enter {self.income_or_expense} name: ")
                 self.label1.grid(row = 0, column = 0, padx = 10, pady = 10)
                 self.entry1.grid(row = 0, column = 1, padx = 10, pady = 10)
