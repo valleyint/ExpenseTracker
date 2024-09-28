@@ -49,13 +49,19 @@ func (d *Db) AddExpense(e Expense) {
 	d.db.Create(&e)
 }
 
-func (d *Db) GetAtTime(tm time.Time) ([]Income, []Expense) {
+func (d *Db) GetIncomeAtTime(tm time.Time) ([]Income) {
 	var incomes []Income
-	d.db.Raw("SELECT tm, name, value FROM incomes WHERE tm = ?", tm).Scan(&Income{})
-
-	var expenses []Expense
-	d.db.Raw("SELECT tm, name, value FROM expenses WHERE tm = ?", tm).Scan(&Expense{})
-
-	return incomes, expenses
+	d.db.Raw("SELECT tm, name, value FROM incomes WHERE tm = ?", tm).Scan(incomes)
+	return incomes
 }
 
+func (d *Db) GetExpenseAtTime(tm time.Time) ([]Expense) {
+	var expenses []Expense
+	d.db.Raw("SELECT tm, name, value FROM expenses WHERE tm = ?", tm).Scan(expenses)
+
+	return expenses
+}
+
+func (d *Db) GetAtTime(tm time.Time) ([]Income, []Expense) {
+	return d.GetIncomeAtTime(tm),d.GetExpenseAtTime(tm)
+}
