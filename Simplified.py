@@ -8,6 +8,8 @@ import matplotlib.pyplot as plot
 import time
 from PIL import Image, ImageTk
 
+import db
+
 #Class
 
 class ExpensesTracker():
@@ -138,21 +140,24 @@ class ExpensesTracker():
         self.entry2.delete(0, "end")
         self.label2.grid_forget()
         if self.income_or_expense == "Income":
-            if name in self.incomes[0]:
-                self.incomes[1][self.incomes[0].index(name)] += amount
-            else:
-                self.incomes[0].append(name)
-                self.incomes[1].append(amount)
+            # if name in self.incomes[0]:
+            #     self.incomes[1][self.incomes[0].index(name)] += amount
+            # else:
+            #     self.incomes[0].append(name)
+            #     self.incomes[1].append(amount)
+            db.db.createIncome(name=name,value=amount,time=time.time())
         else:
-            if name in self.expenses[0]:
-                self.expenses[1][self.expenses[0].index(name)] += amount
-            else:
-                self.expenses[0].append(name)
-                self.expenses[1].append(amount)
+            # if name in self.expenses[0]:
+            #     self.expenses[1][self.expenses[0].index(name)] += amount
+            # else:
+            #     self.expenses[0].append(name)
+            #     self.expenses[1].append(amount)
+            db.db.createExpense(name=name,value=amount,time=time.time())
         self.label1.config(text = "Successfully added!")
         self.button1.grid_forget()
 
     def remove(self):
+        # TODO : convert to use Db
         name = str(self.entry1.get())
         self.entry1.grid_forget()
         self.entry1.delete(0, "end")
@@ -181,15 +186,25 @@ class ExpensesTracker():
         self.entry2.delete(0, "end")
         self.label2.grid_forget()
         if self.income_or_expense == "Income":
-            if name in self.incomes[0]:
-                self.incomes[1][self.incomes[0].index(name)] = amount
+            # if name in self.incomes[0]:
+            #     self.incomes[1][self.incomes[0].index(name)] = amount
+            # else:
+            #     self.label1.config(text = "Income not found.")
+            prev = db.db.getIncome(name=name)
+            if len(prev) != 0:
+                db.db.createIncome(name=name, value=amount, time = prev[0]["time"])
             else:
-                self.label1.config(text = "Income not found.")    
+                self.label1.config(text = "Income not found.") 
         else:
-            if name in self.expenses[0]:
-                self.expenses[1][self.expenses[0].index(name)] = amount
+            # if name in self.expenses[0]:
+            #     self.expenses[1][self.expenses[0].index(name)] = amount
+            # else:
+            #     self.label1.config(text = "Expense not found.")
+            prev = db.db.getExpense(name=name)
+            if len(prev) != 0:
+                db.db.createExpense(name=name, value=amount, time = prev[0]["time"])
             else:
-                self.label1.config(text = "Expense not found.")
+                self.label1.config(text = "Expense not found.") 
         self.label1.config(text = "Successfully updated!")
         self.button1.grid_forget()
 

@@ -115,16 +115,44 @@ func (c *controller) handleRequest(req request) {
 		dbvals := database.Expense{Tm: time.Unix(req.Time, 0), Name: req.Name, Value: float64(req.Value)}
 		c.db.AddExpense(dbvals)
 
-	case "GetIncome":
+	case "GetIncomeAtTime":
 		incomes := c.db.GetIncomeAtTime(time.Unix(req.Time, 0))
 		resJson, err := json.Marshal(incomes)
 		if err != nil {
 			log.Println(err)
 		}
 		io.WriteString(*c.stdin, string(resJson))
-	case "GetExpense":
+	case "GetExpenseAtTime":
 		expenses := c.db.GetIncomeAtTime(time.Unix(req.Time, 0))
 		expJson, err := json.Marshal(expenses)
+		if err != nil {
+			log.Println(err)
+		}
+		io.WriteString(*c.stdin, string(expJson))
+	case "GetExpenseNameTime" :
+		expense := c.db.GetExpenseNameTime(req.Name,time.Unix(req.Time,0))
+		expJson, err := json.Marshal(expense)
+		if err != nil {
+			log.Println(err)
+		}
+		io.WriteString(*c.stdin, string(expJson))
+	case "GetIncomeNameTime" :
+		income := c.db.GetIncomeNameTime(req.Name,time.Unix(req.Time,0))
+		incJson, err := json.Marshal(income)
+		if err != nil {
+			log.Println(err)
+		}
+		io.WriteString(*c.stdin, string(incJson))
+	case "GetIncome" :
+		income := c.db.GetIncome(req.Name)
+		incJson, err := json.Marshal(income)
+		if err != nil {
+			log.Println(err)
+		}
+		io.WriteString(*c.stdin, string(incJson))
+	case "GetExpense" :
+		expense := c.db.GetExpense(req.Name)
+		expJson, err := json.Marshal(expense)
 		if err != nil {
 			log.Println(err)
 		}

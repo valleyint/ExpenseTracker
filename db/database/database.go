@@ -42,12 +42,48 @@ func CreateFianances() (*Db, error) {
 }
 
 func (d *Db) AddIncome(i Income) {
-	d.db.Create(&i)
+	if len(d.GetIncomeNameTime(i.Name,i.Tm)) == 0 {
+		d.db.Create(&i)
+	} else {
+		d.db.Raw("UPDATE incomes SET value = ? WHERE tm = ?, name = ?",i.Value,i.Tm,i.Name)
+	}
 }
 
 func (d *Db) AddExpense(e Expense) {
-	d.db.Create(&e)
+	if len(d.GetExpenseNameTime(e.Name,e.Tm)) == 0 {
+		d.db.Create(&e)
+	} else {
+		d.db.Raw("UPDATE incomes SET value = ? WHERE tm = ?, name = ?",e.Value,e.Tm,e.Name)
+	}
 }
+
+func (d *Db) GetIncome (name string) ([]Income) {
+	var incomes []Income
+	d.db.Raw("SELECT tm, name, value FROM incomes WHERE name = ?", name).Scan(incomes)
+	return incomes
+} 
+
+func (d *Db) GetExpense (name string) ([]Expense) {
+	var expenses []Expense
+	d.db.Raw("SELECT tm, name, value FROM expenses WHERE name = ?", name).Scan(expenses)
+
+	return expenses
+}
+
+func (d *Db) GetExpenseNameTime (name string, tm time.Time) ([]Expense) {
+	var expenses []Expense
+	d.db.Raw("SELECT tm, name, value FROM expenses WHERE name = ?, tm = ?", name).Scan(expenses)
+
+	return expenses
+}
+
+func (d *Db) GetIncomeNameTime (name string, tm time.Time) ([]Expense) {
+	var expenses []Expense
+	d.db.Raw("SELECT tm, name, value FROM incomes WHERE name = ?, tm = ?", name).Scan(expenses)
+
+	return expenses
+}
+
 
 func (d *Db) GetIncomeAtTime(tm time.Time) ([]Income) {
 	var incomes []Income

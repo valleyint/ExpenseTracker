@@ -1,9 +1,5 @@
 #file -- db.py
 
-# to call a go function , the following call is sent :
-# 'functionname'('arguments')
-# the response is in the form of a csv
-
 #import time as tm
 import json
 
@@ -68,4 +64,24 @@ class db :
         #     if instr == '}' :
         #         break
         
+        return json.load(self.infile)
+    
+    def getExpenseNameTime (self, time:float, name:str) :
+        jsoncmd = json.dumps({"cmd":"getExpenseNameTime", "time":time, "name":name})
+        print(jsoncmd,file=self.outfile)
+        return json.load(self.infile)
+
+    def getIncomeNameTime (self, time:float, name:str) :
+        jsoncmd = json.dumps({"cmd":"getIncomeNameTime", "time":time, "name":name})
+        print(jsoncmd,file=self.outfile)
+        return json.load(self.infile)
+    
+    def getIncome (self, name:str) :
+        jsoncmd = json.dumps({"cmd" :"getIncome" ,"name":name})
+        print(jsoncmd,file=self.outfile)
+        return json.load(self.infile)
+    
+    def getExpense (self, name:str) :
+        jsoncmd = json.dumps({"cmd" :"getExpense" ,"name":name})
+        print(jsoncmd,file=self.outfile)
         return json.load(self.infile)
