@@ -9,8 +9,11 @@ import matplotlib.pyplot as plot
 #Class
 
 class ExpensesTracker():
+    print("hii")
+     
     
     def __init__(self, root):
+        print("!	")
         self.root = root
         self.root.title("Expenses Tracker")
         self.root.state("zoomed")
@@ -19,11 +22,11 @@ class ExpensesTracker():
         self.expenses = [["food1", "food2", "food3"], [200.0, 400.0, 600.0]]
         self.buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["GRAPHS", 0], ["QUIT", 0]]
         self.income_or_expense = ""
+        
         self.intro()
 
     def intro(self): 
         self.frame1 = tk.Frame(self.root)
-        print(root.winfo_screenwidth())
         self.label_header = tk.Label(self.frame1, text = "EXPENSES TRACKER", font = ("Arial", 60), bg = "#2C323A", fg = "#F2DFCB", padx = (root.winfo_screenwidth() - self.frame1.winfo_screenheight())/2)
         self.label_header.grid()
         self.frame1.grid()
@@ -31,11 +34,19 @@ class ExpensesTracker():
         self.entry = tk.Entry(self.root)
         self.create_buttons()
         self.frame2.grid(pady = 70, sticky = "w", padx = 50)
+        for i in range(total_rows):
+            for j in range(total_columns):
+                    
+                self.e = tk.Entry(self.frame2, width=10, fg='blue', font=('Arial',16,'bold'))
+                    
+                self.e.grid(row=i, column=j+1,)
+                self.e.insert(tk.END, lst[i][j])
+                self.e.configure(state = "readonly")
 
     def create_buttons(self):
         for i in range(1, len(self.buttons)):
             self.buttons[i][1] = tk.Button(self.frame2, text = self.buttons[i][0], command = lambda i=i: self.button_command(self.buttons[0], i), padx = 10, pady = 5, width = 15, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23")
-            self.buttons[i][1].grid(row = i, column = 0, pady = (root.winfo_screenheight())/30)
+            self.buttons[i][1].grid(row = i, column = 0, pady = (root.winfo_screenheight())/30, padx = 170)
 
     def delete_buttons(self):
         for i in range(len(self.buttons), 1, -1):
@@ -214,7 +225,20 @@ class ExpensesTracker():
                 plot.title("EXPENSE GRAPH")
             plot.show()
 
+
 #Main code
+# take the data
+lst = [(1,'Raj',19),
+    (2,'Aaryan',18),
+    (3,'Vaishnavi',20),
+    (4,'Rachna',21),
+    (5,'Shubham',21)]
+
+
+# find total number of rows and
+# columns in list
+total_rows = len(lst)
+total_columns = len(lst[0])
 
 root = tk.Tk()
 app = ExpensesTracker(root)
