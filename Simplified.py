@@ -4,6 +4,9 @@
 #Imports
 
 import tkinter as tk
+from tkinter import *
+from PIL import Image 
+from PIL import ImageTk
 import matplotlib.pyplot as plot
 
 #Class
@@ -19,10 +22,31 @@ class ExpensesTracker():
         self.expenses = [["food1", "food2", "food3"], [200.0, 400.0, 600.0]]
         self.buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["GRAPHS", 0], ["QUIT", 0]]
         self.income_or_expense = ""
+        # loading the images
+        self.img = ImageTk.PhotoImage(Image.open("photo1.png")) 
+        self.img2 = ImageTk.PhotoImage(Image.open("photo2.png")) 
+        self.img3 = ImageTk.PhotoImage(Image.open("photo3.png")) 
+        self.x = 1
+        self.l=Label() 
+        self.l.grid() 
+
         self.intro()
+
+    def move(self):  
+        if self.x == 4: 
+            self.x = 1
+        if self.x == 1: 
+            self.l.config(image=self.img) 
+        elif self.x == 2: 
+            self.l.config(image=self.img2) 
+        elif self.x == 3: 
+            self.l.config(image=self.img3) 
+        self.x = self.x + 1
+        root.after(2000, self.move) 
 
     def intro(self): 
         self.frame1 = tk.Frame(self.root)
+        self.move()
         print(root.winfo_screenwidth())
         self.label_header = tk.Label(self.frame1, text = "EXPENSES TRACKER", font = ("Arial", 60), bg = "#2C323A", fg = "#F2DFCB", padx = (root.winfo_screenwidth() - self.frame1.winfo_screenheight())/2)
         self.label_header.grid()
@@ -35,7 +59,7 @@ class ExpensesTracker():
     def create_buttons(self):
         for i in range(1, len(self.buttons)):
             self.buttons[i][1] = tk.Button(self.frame2, text = self.buttons[i][0], command = lambda i=i: self.button_command(self.buttons[0], i), padx = 10, pady = 5, width = 15, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23")
-            self.buttons[i][1].grid(row = i, column = 0, pady = (root.winfo_screenheight())/30)
+            self.buttons[i][1].grid(row = 0, column = i, padx = (root.winfo_screenwidth())/20)
 
     def delete_buttons(self):
         for i in range(len(self.buttons), 1, -1):
@@ -219,3 +243,15 @@ class ExpensesTracker():
 root = tk.Tk()
 app = ExpensesTracker(root)
 root.mainloop()
+
+  
+  
+  
+# using recursion to slide to next image 
+  
+# function to change to next image 
+
+  
+  
+  
+  
