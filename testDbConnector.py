@@ -1,12 +1,9 @@
-import sys
-import db
+import db_alchemy as db
 import time
 
-d = db.db(outfile=sys.stdout,infile=sys.stdin)
+d = db.Db()
+d.create_tables()
+d.add_expense("aex",100,time.time())
+d.add_income("ain",100,time.time())
 
-now = time.time()
-
-d.createIncome(name="testIncome",value=100000,time=now)
-d.createExpense(name="testIncome",value=50000,time=now)
-
-#print(d.getExpenseAtTime(time=now))
+print(d.get_income('ain'),d.get_expense('aex'),sep='\n')

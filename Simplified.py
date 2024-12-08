@@ -1,6 +1,5 @@
 #EXPENSES TRACKER
 
-
 #Imports
 
 import tkinter as tk
@@ -8,8 +7,7 @@ import matplotlib.pyplot as plot
 import time
 from PIL import Image, ImageTk
 
-import db
-
+import db_alchemy as dba
 #Class
 
 class ExpensesTracker():
@@ -26,6 +24,9 @@ class ExpensesTracker():
         self.img1 = Image.open("Header.png")
         self.img1 = ImageTk.PhotoImage(self.img1)
         self.intro()
+
+        self.db = dba.Db()
+        self.db.create_tables()
         
     def intro(self):
         self.frame1 = tk.Frame(self.root)
@@ -140,43 +141,24 @@ class ExpensesTracker():
         self.entry2.delete(0, "end")
         self.label2.grid_forget()
         if self.income_or_expense == "Income":
-            # if name in self.incomes[0]:
-            #     self.incomes[1][self.incomes[0].index(name)] += amount
-            # else:
-            #     self.incomes[0].append(name)
-            #     self.incomes[1].append(amount)
-            db.db.createIncome(name=name,value=amount,time=time.time())
+            self.db.add_income(name=name,value=amount,time=time.time())
         else:
-            # if name in self.expenses[0]:
-            #     self.expenses[1][self.expenses[0].index(name)] += amount
-            # else:
-            #     self.expenses[0].append(name)
-            #     self.expenses[1].append(amount)
-            db.db.createExpense(name=name,value=amount,time=time.time())
+            self.db.add_expense(name=name,value=amount,time=time.time())
+
         self.label1.config(text = "Successfully added!")
         self.button1.grid_forget()
 
     def remove(self):
-        # TODO : convert to use Db
         name = str(self.entry1.get())
         self.entry1.grid_forget()
         self.entry1.delete(0, "end")
         self.button1.grid_forget()
-        if self.income_or_expense == "Income":
-            if name in self.incomes[0]:
-                self.incomes[1].pop(self.incomes[0].index(name))
-                self.incomes[0].remove(name)
-                self.label1.config(text = "Successfully removed!")
-            else:
-                self.label1.config(text = "Income not found.")
-        else:
-            if name in self.expenses[0]:
-                self.expenses[1].remove(self.expenses[0].index(name))
-                self.expenses[0].remove(name)
-                self.label1.config(text = "Successfully removed!")
-            else:
-                self.label1.config(text = "Expense not found.")
 
+        if self.income_or_expense == "Income":
+            self.db.delete_income(name,0)                  
+        else:
+            self.db.delete_expense(name,0)
+     
     def update(self):
         name = str(self.entry1.get())
         amount = float(self.entry2.get())
@@ -186,23 +168,15 @@ class ExpensesTracker():
         self.entry2.delete(0, "end")
         self.label2.grid_forget()
         if self.income_or_expense == "Income":
-            # if name in self.incomes[0]:
-            #     self.incomes[1][self.incomes[0].index(name)] = amount
-            # else:
-            #     self.label1.config(text = "Income not found.")
-            prev = db.db.getIncome(name=name)
+            prev = self.db.get_income(name)
             if len(prev) != 0:
-                db.db.createIncome(name=name, value=amount, time = prev[0]["time"])
+                self.db.update_income(name,amount,time=prev[-1][2])
             else:
                 self.label1.config(text = "Income not found.") 
         else:
-            # if name in self.expenses[0]:
-            #     self.expenses[1][self.expenses[0].index(name)] = amount
-            # else:
-            #     self.label1.config(text = "Expense not found.")
-            prev = db.db.getExpense(name=name)
+            prev = self.db.get_expense(name)
             if len(prev) != 0:
-                db.db.createExpense(name=name, value=amount, time = prev[0]["time"])
+                self.db.update_expense(name,amount,time=prev[-1][2])
             else:
                 self.label1.config(text = "Expense not found.") 
         self.label1.config(text = "Successfully updated!")
@@ -213,16 +187,21 @@ class ExpensesTracker():
         self.entry1.grid_forget()
         self.entry1.delete(0, "end")
         self.button1.grid_forget()
-        if name in self.incomes[0] or name in self.expenses[0]:
-            if self.income_or_expense == "Income":
-                self.show_output = name + " : " + str(self.incomes[1][self.incomes[0].index(name)])
-            else:
-                self.show_output = name + " : " + str(self.expenses[1][self.expenses[0].index(name)])
-        else:
+
+        arr = []
+        if self.income_or_expense[0] == "Income" :
+            arr = self.db.get_income(name)
+        else :
+            arr = self.db.get_income(name)
+        
+        if len(arr) > 0 :
+            self.show_output = name + " : " + str(arr[0][2])
+        else :
             self.show_output = self.income_or_expense + " not found."
         self.label1.config(text = self.show_output)
 
     def pie_chart(self, type):
+            # TODO : convert to use Db
             plot.style.use("dark_background")
             if type == 2:
                 plot.pie(self.incomes[1], labels = self.incomes[0], wedgeprops=dict(width=0.5))
