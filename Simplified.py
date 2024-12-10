@@ -5,13 +5,12 @@
 import tkinter as tk
 import matplotlib.pyplot as plot
 import time
-from PIL import Image, ImageTk
 
 import db_alchemy as dba
 #Class
 
 class ExpensesTracker():
-
+    
     def __init__(self, root):
         self.root = root
         self.root.title("Expenses Tracker")
@@ -21,8 +20,6 @@ class ExpensesTracker():
         self.expenses = [["food1", "food2", "food3"], [200.0, 400.0, 600.0]]
         self.buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["GRAPHS", 0], ["QUIT", 0]]
         self.income_or_expense = ""
-        self.img1 = Image.open("Header.png")
-        self.img1 = ImageTk.PhotoImage(self.img1)
         self.intro()
 
         self.db = dba.Db()
@@ -30,19 +27,20 @@ class ExpensesTracker():
         
     def intro(self):
         self.frame1 = tk.Frame(self.root)
-        self.label_header = tk.Label(self.frame1, image = self.img1, bg = "#2C323A")
-        self.label_header.pack()
-        self.frame1.pack(anchor = "n", fill = "x")
+        print(root.winfo_screenwidth())
+        self.label_header = tk.Label(self.frame1, text = "EXPENSES TRACKER", font = ("Arial", 60), bg = "#2C323A", fg = "#F2DFCB", padx = (root.winfo_screenwidth() - self.frame1.winfo_screenheight())/2)
+        self.label_header.grid()
+        self.frame1.grid()
         self.frame2 = tk.Frame(self.root, bg = "#2C323A", )
         self.entry = tk.Entry(self.root)
         self.create_buttons()
-        self.frame2.pack(anchor = "nw", pady = 40)
+        self.frame2.grid(pady = 70, sticky = "w", padx = 50)
 
     def create_buttons(self):
         for i in range(1, len(self.buttons)):
             self.buttons[i][1] = tk.Button(self.frame2, text = self.buttons[i][0], command = lambda i=i: self.button_command(self.buttons[0], i), padx = 10, pady = 5, width = 15, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23")
-            self.buttons[i][1].grid(row = 0, column = i, padx = 50)
-    
+            self.buttons[i][1].grid(row = i, column = 0, pady = (root.winfo_screenheight())/30)
+
     def delete_buttons(self):
         for i in range(len(self.buttons), 1, -1):
             if isinstance(self.buttons[i-1][1], tk.Button):
@@ -94,7 +92,7 @@ class ExpensesTracker():
                 self.entry2.grid(row = 1, column = 1, padx = 10, pady = 10)
                 self.button1.config(command = self.add)
                 self.button1.grid(row = 2, column = 0)
-                self.frame3.pack()
+                self.frame3.grid()
             elif num == 3:
                 self.label2.grid_forget()
                 self.entry2.grid_forget()
@@ -103,7 +101,7 @@ class ExpensesTracker():
                 self.entry1.grid(row = 0, column = 1, padx = 10, pady = 10)
                 self.button1.config(command = self.remove)
                 self.button1.grid(row = 1, column = 0)
-                self.frame3.pack()
+                self.frame3.grid()
             elif num == 4:
                 self.label1.config(text = f"Enter {self.income_or_expense} name: ")
                 self.label1.grid(row = 0, column = 0, padx = 10, pady = 10)
@@ -113,7 +111,7 @@ class ExpensesTracker():
                 self.entry2.grid(row = 1, column = 1, padx = 10, pady = 10)
                 self.button1.config(command = self.update)
                 self.button1.grid(row = 2, column = 0)
-                self.frame3.pack()
+                self.frame3.grid()
             else:
                 self.label2.grid_forget()
                 self.entry2.grid_forget()
@@ -122,7 +120,7 @@ class ExpensesTracker():
                 self.entry1.grid(row = 0, column = 1, padx = 10, pady = 10)
                 self.button1.config(command = self.show)
                 self.button1.grid(row = 1, column = 0, padx = 10, pady = 10)
-                self.frame3.pack()
+                self.frame3.grid()
 
         if seq == 13:
             if num == 1:
