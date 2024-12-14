@@ -6,7 +6,6 @@ import tkinter as tk
 import matplotlib.pyplot as plot
 import time
 
-import db_alchemy as dba
 #Class
 
 class ExpensesTracker():
@@ -18,27 +17,32 @@ class ExpensesTracker():
         self.root.config(background = "#2C323A")
         self.incomes = [["salary1", "salary2", "salary3"], [100.0, 300.0, 500.0]]
         self.expenses = [["food1", "food2", "food3"], [200.0, 400.0, 600.0]]
-        self.buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["GRAPHS", 0], ["QUIT", 0]]
+        self.buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["QUIT", 0]]
         self.income_or_expense = ""
         self.intro()
 
-        self.db = dba.Db()
-        self.db.create_tables()
-        
     def intro(self):
-        self.frame1 = tk.Frame(self.root)
-        self.label_header = tk.Label(self.frame1, text = "EXPENSES TRACKER", font = ("Arial", 60), bg = "#2C323A", fg = "#F2DFCB", padx = (root.winfo_screenwidth() - self.frame1.winfo_screenheight())/2)
-        self.label_header.grid()
-        self.frame1.grid()
-        self.frame2 = tk.Frame(self.root, bg = "#2C323A", )
+        root.grid_columnconfigure(0, weight=1)
+        self.frame1 = tk.Frame(self.root, bg = "#2C323A")
+        self.frame2 = tk.Frame(self.root, bg = "#2C323A")
+        self.frame3 = tk.Frame(self.root, bg = "#2C323A")
+        self.label_header = tk.Label(self.frame1, text = "EXPENSES TRACKER", font = ("Arial", 60), bg = "#2C323A", fg = "#F2DFCB")
+        self.label_header.grid(pady = 50)
+        self.frame1.grid(row = 0, column = 0, sticky = "ew")
+        root.grid_columnconfigure(0, weight=1)
+        self.frame1.grid_columnconfigure(0, weight=1)
         self.entry = tk.Entry(self.root)
+        self.frame2.grid(row = 1, column = 0, sticky = "ew")
         self.create_buttons()
-        self.frame2.grid(pady = 70, sticky = "w", padx = 50)
+                
 
     def create_buttons(self):
+        for i in range(len(self.buttons)):
+            self.frame2.grid_columnconfigure(i, weight=1)
         for i in range(1, len(self.buttons)):
-            self.buttons[i][1] = tk.Button(self.frame2, text = self.buttons[i][0], command = lambda i=i: self.button_command(self.buttons[0], i), padx = 10, pady = 5, width = 15, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23")
-            self.buttons[i][1].grid(row = i, column = 0, pady = (root.winfo_screenheight())/30)
+            self.buttons[i][1] = tk.Button(self.frame2, text = self.buttons[i][0], command = lambda i=i: self.button_command(self.buttons[0], i), height= 2, width = 16, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23", font = ("Arial", 15))
+            self.buttons[i][1].grid(row = 0, column = i, padx = (root.winfo_screenwidth()/(2**len(self.buttons))))
+        
 
     def delete_buttons(self):
         for i in range(len(self.buttons), 1, -1):
@@ -51,8 +55,7 @@ class ExpensesTracker():
             if num == 1:
                 self.income_or_expense = "Income"
                 self.delete_buttons()
-                self.buttons = [11, ["↩", 0], ["ADD INCOME", 0], ["REMOVE INCOME", 0], ["UPDATE INCOME", 0], ["GET INCOME", 0]]
-                self.frame3 = tk.Frame(self.root, bg = "#2C323A", relief = tk.GROOVE)
+                self.buttons = [11, ["BACK", 0], ["ADD INCOME", 0], ["REMOVE INCOME", 0], ["UPDATE INCOME", 0], ["GET INCOME", 0]]
                 self.label1 = tk.Label(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
                 self.label2 = tk.Label(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
                 self.entry1 = tk.Entry(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
@@ -71,16 +74,13 @@ class ExpensesTracker():
                 self.button1 = tk.Button(self.frame3, text = "Submit", width = 15, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23")
                 self.create_buttons()
             elif num == 3:
-                self.delete_buttons()
-                self.buttons = [13, ["↩", 0], ["INCOME CHART", 0], ["EXPENSE CHART", 0]]
-                self.create_buttons()
-            else:
                 root.destroy()
+            else:
+                pass
         if seq == 11 or seq == 12:
             if num == 1:
-                self.frame3.destroy()
                 self.delete_buttons()
-                self.buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["GRAPHS", 0], ["QUIT", 0]]
+                self.buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["QUIT", 0]]
                 self.create_buttons()
             elif num == 2:
                 self.label1.config(text = f"Enter {self.income_or_expense} name: ")
@@ -128,7 +128,7 @@ class ExpensesTracker():
                 self.create_buttons()
             else:
                 self.pie_chart(num)
-
+       
     def add(self):
         name = str(self.entry1.get())
         amount = float(self.entry2.get())
@@ -138,9 +138,17 @@ class ExpensesTracker():
         self.entry2.delete(0, "end")
         self.label2.grid_forget()
         if self.income_or_expense == "Income":
-            self.db.add_income(name=name,value=amount,time=time.time())
+            if name in self.incomes[0]:
+                self.incomes[1][self.incomes[0].index(name)] += amount
+            else:
+                self.incomes[0].append(name)
+                self.incomes[1].append(amount)
         else:
-            self.db.add_expense(name=name,value=amount,time=time.time())
+            if name in self.expenses[0]:
+                self.expenses[1][self.expenses[0].index(name)] += amount
+            else:
+                self.expenses[0].append(name)
+                self.expenses[1].append(amount)
 
         self.label1.config(text = "Successfully added!")
         self.button1.grid_forget()
@@ -150,11 +158,20 @@ class ExpensesTracker():
         self.entry1.grid_forget()
         self.entry1.delete(0, "end")
         self.button1.grid_forget()
-
         if self.income_or_expense == "Income":
-            self.db.delete_income(name,0)                  
+            if name in self.incomes[0]:
+                self.incomes[1].pop(self.incomes[0].index(name))
+                self.incomes[0].remove(name)
+                self.label1.config(text = "Successfully removed!")
+            else:
+                self.label1.config(text = "Income not found.")
         else:
-            self.db.delete_expense(name,0)
+            if name in self.expenses[0]:
+                self.expenses[1].remove(self.expenses[0].index(name))
+                self.expenses[0].remove(name)
+                self.label1.config(text = "Successfully removed!")
+            else:
+                self.label1.config(text = "Expense not found.")
      
     def update(self):
         name = str(self.entry1.get())
@@ -165,17 +182,15 @@ class ExpensesTracker():
         self.entry2.delete(0, "end")
         self.label2.grid_forget()
         if self.income_or_expense == "Income":
-            prev = self.db.get_income(name)
-            if len(prev) != 0:
-                self.db.update_income(name,amount,time=prev[-1][2])
+            if name in self.incomes[0]:
+                self.incomes[1][self.incomes[0].index(name)] = amount
             else:
-                self.label1.config(text = "Income not found.") 
+                self.label1.config(text = "Income not found.")    
         else:
-            prev = self.db.get_expense(name)
-            if len(prev) != 0:
-                self.db.update_expense(name,amount,time=prev[-1][2])
+            if name in self.expenses[0]:
+                self.expenses[1][self.expenses[0].index(name)] = amount
             else:
-                self.label1.config(text = "Expense not found.") 
+                self.label1.config(text = "Expense not found.")
         self.label1.config(text = "Successfully updated!")
         self.button1.grid_forget()
 
@@ -184,21 +199,17 @@ class ExpensesTracker():
         self.entry1.grid_forget()
         self.entry1.delete(0, "end")
         self.button1.grid_forget()
-
-        arr = []
-        if self.income_or_expense[0] == "Income" :
-            arr = self.db.get_income(name)
-        else :
-            arr = self.db.get_income(name)
-        
-        if len(arr) > 0 :
-            self.show_output = name + " : " + str(arr[0][2])
-        else :
+        if name in self.incomes[0] or name in self.expenses[0]:
+            if self.income_or_expense == "Income":
+                self.show_output = name + " : " + str(self.incomes[1][self.incomes[0].index(name)])
+            else:
+                self.show_output = name + " : " + str(self.expenses[1][self.expenses[0].index(name)])
+        else:
             self.show_output = self.income_or_expense + " not found."
         self.label1.config(text = self.show_output)
 
+
     def pie_chart(self, type):
-            # TODO : convert to use Db
             plot.style.use("dark_background")
             if type == 2:
                 plot.pie(self.incomes[1], labels = self.incomes[0], wedgeprops=dict(width=0.5))
