@@ -1,0 +1,319 @@
+#EXPENSES TRACKER
+
+#Imports
+
+import tkinter as tk
+import matplotlib.pyplot as plot
+from PIL import Image 
+from PIL import ImageTk
+import time
+import speech_recognition as sr
+import pyttsx3 
+
+#Class
+
+class ExpensesTracker():
+    
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Expenses Tracker")
+        self.root.state("zoomed")
+        self.root.config(background = "#2C323A")
+        self.incomes = [["salary1", "salary2", "salary3"], [100.0, 300.0, 500.0]]
+        self.expenses = [["food1", "food2", "food3"], [200.0, 400.0, 600.0]]
+        self.frame2_buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["QUIT", 0]]
+        self.income_or_expense = ""
+        self.img = ImageTk.PhotoImage(Image.open("Image1.jpeg").resize((600,400))) 
+        self.img2 = ImageTk.PhotoImage(Image.open("Image2.jpeg").resize((600,400))) 
+        self.img3 = ImageTk.PhotoImage(Image.open("Image3.jpeg").resize((600,400))) 
+        self.count = 1
+        self.a = 1
+        self.r = sr.Recognizer() 
+        self.intro()
+    
+    # Function to convert text to speech
+    def SpeakText(command):
+        
+        # Initialization
+        engine = pyttsx3.init()
+        engine.say(command) 
+        engine.runAndWait()
+
+    def intro(self):
+        root.grid_columnconfigure(0, weight=1)
+        self.frame1 = tk.Frame(self.root, bg = "#2C323A")
+        self.frame2 = tk.Frame(self.root, bg = "#2C323A")
+        self.frame3 = tk.Frame(self.root, bg = "#2C323A")
+        self.label_header = tk.Label(self.frame1, text = " EXPENSES TRACKER ", font = ("Arial", 60), relief = "groove", bg = "#2C323A", fg = "#F2DFCB")
+        self.label_header.grid(pady = 10)
+        self.frame1.grid(row = 0, column = 0, sticky = "ew")
+        root.grid_columnconfigure(0, weight=1)
+        self.frame1.grid_columnconfigure(0, weight=1)
+        self.entry = tk.Entry(self.root)
+        self.frame2.grid(row = 1, column = 0, pady = 30, sticky = "ew")
+        self.frame2.grid_columnconfigure(0, weight=1)
+        self.create_buttons()
+        self.make_page()
+
+    def rec(self):
+        while(a == 1):    
+    
+        # Exception handling to handle
+        # exceptions at the runtime
+            try:
+                
+                # use the microphone as source for input.
+                with sr.Microphone() as source2:
+                    
+                    # wait for a second to let the recognizer
+                    # adjust the energy threshold based on
+                    # the surrounding noise level 
+                    self.r.adjust_for_ambient_noise(source2, duration=0.2)
+                    
+                    #listens for the user's input 
+                    audio2 = self.r.listen(source2)
+                    
+                    # Using google to recognize audio
+                    MyText = self.r.recognize_google(audio2)
+                    MyText = MyText.lower()
+
+                    print("Did you say ",MyText)
+                    self.SpeakText(MyText)
+                    if MyText == "exit":
+                        print("Are you sure you want to exit")
+                        exit()
+                    elif MyText == "login" :
+                        print("logging in")
+                        #change var
+                        self.SpeakText("Sure. Logging in now") 
+                        a = 0
+                    else:
+                        print("Unrecognized command") 
+                        self.SpeakText("Sorry, did not recognize command.")
+                
+                            
+                
+            except sr.RequestError as e:
+                print("Could not request results; {0}".format(e))
+        
+            except sr.UnknownValueError:
+                print("Didnt recognize what you said, please try again")
+                self.SpeakText("Sorry, please say command again")
+
+
+    def make_page(self):
+        self.graph_label = tk.Label(self.frame3, text = "Graphs", width = 10, font = ("Arial", 24), bg = "#1C1B23", fg = "#F2DFCB", relief = "groove").grid(row = 0, column = 0)
+        self.income_graph = tk.Button(self.frame3, text = "1. Income Graph", command = lambda: self.pie_chart(1), height= 2, width = 16, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23", font = ("Arial", 15))
+        self.income_graph.grid(row = 1, column = 0)
+        self.expense_graph = tk.Button(self.frame3, text = "2. Expense Graph", command = lambda: self.pie_chart(2), height= 2, width = 16, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23", font = ("Arial", 15))
+        self.expense_graph.grid(row = 2, column = 0)
+        self.picture = tk.Label(self.frame3) 
+        self.picture.grid(row = 0, column = 2, padx = 80, rowspan = 6) 
+        self.frame3.grid(row = 2, column = 0, sticky = "ew", ipadx = 40)
+        self.frame3.grid_columnconfigure(0, weight=1)
+        self.move()
+    
+    def move(self):  
+        if self.count == 4: 
+            self.count = 1
+        if self.count == 1: 
+            self.picture.config(image=self.img) 
+        elif self.count == 2: 
+            self.picture.config(image=self.img2) 
+        elif self.count == 3: 
+            self.picture.config(image=self.img3) 
+        self.count = self.count + 1
+        root.after(2000, self.move) 
+                
+
+    def create_buttons(self):
+        for i in range(1, len(self.frame2_buttons)):
+            self.frame2_buttons[i][1] = tk.Button(self.frame2, text = self.frame2_buttons[i][0], command = lambda i=i: self.button_command(self.frame2_buttons[0], i), height= 2, width = 16, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23", font = ("Arial", 15))
+            self.frame2_buttons[i][1].grid(row = 0, column = i-1)
+        for i in range(len(self.frame2_buttons)):
+            self.frame2.grid_columnconfigure(i, weight=1)
+        if self.frame2_buttons[0] == 1:
+            self.make_page()
+        
+
+    def delete_buttons(self):
+        for widget in self.frame2.winfo_children():
+            widget.destroy()
+        for widget in self.frame3.winfo_children():
+            widget.destroy()
+
+    def button_command(self, seq, num):
+        if seq == 1:
+            if num == 1:
+                self.income_or_expense = "Income"
+                self.delete_buttons()
+                self.frame2_buttons = [11, ["↩    BACK   ", 0], ["ADD INCOME", 0], ["REMOVE INCOME", 0], ["UPDATE INCOME", 0], ["GET INCOME", 0]]
+                self.label1 = tk.Label(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.label2 = tk.Label(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.entry1 = tk.Entry(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.entry2 = tk.Entry(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.button1 = tk.Button(self.frame3, text = "Submit", width = 15, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23")
+                self.create_buttons()
+            elif num == 2:
+                self.income_or_expense = "Expense"
+                self.delete_buttons()
+                self.frame2_buttons = [12, ["↩    BACK  ", 0], ["ADD EXPENSE", 0], ["REMOVE EXPENSE", 0], ["UPDATE EXPENSE", 0], ["GET EXPENSE", 0]]
+                self.frame3 = tk.Frame(self.root, bg = "#2C323A")
+                self.label1 = tk.Label(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.label2 = tk.Label(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.entry1 = tk.Entry(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB", insertbackground = "#F2DFCB")
+                self.entry2 = tk.Entry(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB", insertbackground = "#F2DFCB")
+                self.button1 = tk.Button(self.frame3, text = "Submit", width = 15, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23")
+                self.create_buttons()
+            elif num == 3:
+                root.destroy()
+            else:
+                pass
+        if seq == 11 or seq == 12:
+            if num == 1:
+                self.delete_buttons()
+                self.frame2_buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["QUIT", 0]]
+                self.create_buttons()
+            elif num == 2:
+                self.label1.config(text = f"Enter {self.income_or_expense} name: ")
+                self.label1.grid(row = 0, column = 0, padx = 10, pady = 10)
+                self.label2.config(text = f"Enter {self.income_or_expense} amount: ")
+                self.label2.grid(row = 1, column = 0, padx = 10, pady = 10)
+                self.entry1.grid(row = 0, column = 1, padx = 10, pady = 10)
+                self.entry2.grid(row = 1, column = 1, padx = 10, pady = 10)
+                self.button1.config(command = self.add)
+                self.button1.grid(row = 2, column = 0)
+                self.frame3.grid()
+            elif num == 3:
+                self.label2.grid_forget()
+                self.entry2.grid_forget()
+                self.label1.config(text = f"Enter {self.income_or_expense} name: ")
+                self.label1.grid(row = 0, column = 0, padx = 10, pady = 10)
+                self.entry1.grid(row = 0, column = 1, padx = 10, pady = 10)
+                self.button1.config(command = self.remove)
+                self.button1.grid(row = 1, column = 0)
+                self.frame3.grid()
+            elif num == 4:
+                self.label1.config(text = f"Enter {self.income_or_expense} name: ")
+                self.label1.grid(row = 0, column = 0, padx = 10, pady = 10)
+                self.label2.config(text = f"Enter new {self.income_or_expense} amount: ")
+                self.label2.grid(row = 1, column = 0, padx = 10, pady = 10)
+                self.entry1.grid(row = 0, column = 1, padx = 10, pady = 10)
+                self.entry2.grid(row = 1, column = 1, padx = 10, pady = 10)
+                self.button1.config(command = self.update)
+                self.button1.grid(row = 2, column = 0)
+                self.frame3.grid()
+            else:
+                self.label2.grid_forget()
+                self.entry2.grid_forget()
+                self.label1.config(text = "Enter income name: ")
+                self.label1.grid(row = 0, column = 0, padx = 10, pady = 10)
+                self.entry1.grid(row = 0, column = 1, padx = 10, pady = 10)
+                self.button1.config(command = self.show)
+                self.button1.grid(row = 1, column = 0, padx = 10, pady = 10)
+                self.frame3.grid()
+
+        if seq == 13:
+            if num == 1:
+                self.delete_buttons()
+                self.frame2_buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["GRAPHS", 0], ["QUIT", 0]]
+                self.create_buttons()
+            else:
+                self.pie_chart(num)
+       
+    def add(self):
+        name = str(self.entry1.get())
+        amount = float(self.entry2.get())
+        self.entry1.grid_forget()
+        self.entry1.delete(0, "end")
+        self.entry2.grid_forget()
+        self.entry2.delete(0, "end")
+        self.label2.grid_forget()
+        if self.income_or_expense == "Income":
+            if name in self.incomes[0]:
+                self.incomes[1][self.incomes[0].index(name)] += amount
+            else:
+                self.incomes[0].append(name)
+                self.incomes[1].append(amount)
+        else:
+            if name in self.expenses[0]:
+                self.expenses[1][self.expenses[0].index(name)] += amount
+            else:
+                self.expenses[0].append(name)
+                self.expenses[1].append(amount)
+
+        self.label1.config(text = "Successfully added!")
+        self.button1.grid_forget()
+
+    def remove(self):
+        name = str(self.entry1.get())
+        self.entry1.grid_forget()
+        self.entry1.delete(0, "end")
+        self.button1.grid_forget()
+        if self.income_or_expense == "Income":
+            if name in self.incomes[0]:
+                self.incomes[1].pop(self.incomes[0].index(name))
+                self.incomes[0].remove(name)
+                self.label1.config(text = "Successfully removed!")
+            else:
+                self.label1.config(text = "Income not found.")
+        else:
+            if name in self.expenses[0]:
+                self.expenses[1].remove(self.expenses[0].index(name))
+                self.expenses[0].remove(name)
+                self.label1.config(text = "Successfully removed!")
+            else:
+                self.label1.config(text = "Expense not found.")
+     
+    def update(self):
+        name = str(self.entry1.get())
+        amount = float(self.entry2.get())
+        self.entry1.grid_forget()
+        self.entry1.delete(0, "end")
+        self.entry2.grid_forget()
+        self.entry2.delete(0, "end")
+        self.label2.grid_forget()
+        if self.income_or_expense == "Income":
+            if name in self.incomes[0]:
+                self.incomes[1][self.incomes[0].index(name)] = amount
+            else:
+                self.label1.config(text = "Income not found.")    
+        else:
+            if name in self.expenses[0]:
+                self.expenses[1][self.expenses[0].index(name)] = amount
+            else:
+                self.label1.config(text = "Expense not found.")
+        self.label1.config(text = "Successfully updated!")
+        self.button1.grid_forget()
+
+    def show(self):
+        name = self.entry1.get()
+        self.entry1.grid_forget()
+        self.entry1.delete(0, "end")
+        self.button1.grid_forget()
+        if name in self.incomes[0] or name in self.expenses[0]:
+            if self.income_or_expense == "Income":
+                self.show_output = name + " : " + str(self.incomes[1][self.incomes[0].index(name)])
+            else:
+                self.show_output = name + " : " + str(self.expenses[1][self.expenses[0].index(name)])
+        else:
+            self.show_output = self.income_or_expense + " not found."
+        self.label1.config(text = self.show_output)
+
+
+    def pie_chart(self, type):
+            plot.style.use("dark_background")
+            if type == 1:
+                plot.pie(self.incomes[1], labels = self.incomes[0], wedgeprops=dict(width=0.5))
+                plot.title("INCOME GRAPH")
+            if type == 2:
+                plot.pie(self.expenses[1], labels = self.expenses[0], wedgeprops=dict(width=0.5))
+                plot.title("EXPENSE GRAPH")
+            plot.show()
+
+#Main code
+
+root = tk.Tk()
+app = ExpensesTracker(root)
+
+root.mainloop()
