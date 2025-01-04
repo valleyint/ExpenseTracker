@@ -5,10 +5,10 @@
 import tkinter as tk
 from tkinter import ttk
 import matplotlib.pyplot as plot
-from PIL import Image 
-from PIL import ImageTk
+from PIL import (Image,ImageTk)
 import pyttsx3
 import pickle
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 #Class
 
@@ -19,8 +19,6 @@ class ExpensesTracker():
         self.root.title("Expenses Tracker")
         self.root.state("zoomed")
         self.root.config(background = "#2C323A")
-        #self.incomes = [["salary1", "salary2", "salary3"], [100.0, 300.0, 500.0]]
-        #self.expenses = [["food1", "food2", "food3"], [200.0, 400.0, 600.0]]
         self.frame2_buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["QUIT", 0]]
         self.income_or_expense = ""
         self.img = ImageTk.PhotoImage(Image.open("Image1.jpeg").resize((600,400))) 
@@ -28,14 +26,14 @@ class ExpensesTracker():
         self.img3 = ImageTk.PhotoImage(Image.open("Image3.jpeg").resize((600,400))) 
         self.img4 = ImageTk.PhotoImage(Image.open("Header.png")) 
         self.count = 1
+        self.engine = pyttsx3.init()
+        self.engine.setProperty("rate", 150)
         self.load()
         self.intro()
 
     def SpeakText(self, command):
-        engine = pyttsx3.init()
-        engine.setProperty("rate", 150)
-        engine.say(command) 
-        engine.runAndWait()
+        self.engine.say(command) 
+        self.engine.runAndWait()
 
     def intro(self):
         root.grid_columnconfigure(0, weight=1)
@@ -55,19 +53,20 @@ class ExpensesTracker():
 
     def make_table(self):
         self.tree = ttk.Treeview(self.frame3, columns = ("Sl. No.", "Name", "Amount"), show = 'headings')
-        self.tree.heading("Sl. No.", text = "Sl. No.")
-        self.tree.heading("Name", text = "Name")
-        self.tree.heading("Amount", text = "Amount")
-        self.tree.column("Sl. No.", width = 50)
-        self.tree.column("Name", width = 50)
-        self.tree.column("Amount", width = 100)
+        self.tree.heading("Sl. No.", text = "Sl. No.",anchor='center')
+        self.tree.heading("Name", text = "Name",anchor='center')
+        self.tree.heading("Amount", text = "Amount",anchor='center')
+        self.tree.column("Sl. No.", width = 50,anchor='center')
+        self.tree.column("Name", width = 100,anchor='center')
+        self.tree.column("Amount", width = 100,anchor='center')
         if self.income_or_expense == "Income":    
             for i in range(len(self.incomes[0])):
                 self.tree.insert("", tk.END, values = (i+1, self.incomes[0][i], self.incomes[1][i]))
         else:
             for i in range(len(self.expenses[0])):
                 self.tree.insert("", tk.END, values = (i+1, self.expenses[0][i], self.expenses[1][i]))
-        self.tree.grid(rowspan = 5, row = 0, column = 0)
+        self.tree.pack(pady=50,padx=50)
+
 
     def make_page(self):
         self.graph_label = tk.Label(self.frame3, text = "Graphs", width = 10, font = ("Arial", 24), bg = "#1C1B23", fg = "#F2DFCB", relief = "groove").grid(row = 0, column = 0)
@@ -75,24 +74,25 @@ class ExpensesTracker():
         self.income_graph.grid(row = 1, column = 0)
         self.expense_graph = tk.Button(self.frame3, text = "2. Expense Graph", command = lambda: self.pie_chart(2), height= 2, width = 16, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23", font = ("Arial", 15))
         self.expense_graph.grid(row = 2, column = 0)
-        self.picture = tk.Label(self.frame3) 
+        self.picture = tk.Label(self.frame3)
         self.picture.grid(row = 0, column = 2, padx = 80, rowspan = 6) 
         self.frame3.grid(row = 2, column = 0, sticky = "ew", ipadx = 40)
         self.frame3.grid_columnconfigure(0, weight=1)
         self.move()
     
-    def move(self):  
-        if self.count == 4: 
-            self.count = 1
-        if self.count == 1: 
-            self.picture.config(image=self.img) 
-        elif self.count == 2: 
-            self.picture.config(image=self.img2) 
-        elif self.count == 3: 
-            self.picture.config(image=self.img3) 
-        self.count = self.count + 1
-        if self.pic_move == True:
-            root.after(2000, self.move) 
+    def move(self):
+        if self.pic_move == True :
+            if self.count == 4: 
+                self.count = 1
+            if self.count == 1: 
+                self.picture.config(image=self.img) 
+            elif self.count == 2: 
+                self.picture.config(image=self.img2) 
+            elif self.count == 3: 
+                self.picture.config(image=self.img3) 
+            self.count = self.count + 1
+            if self.pic_move == True:
+                root.after(2000, self.move) 
                 
     def create_buttons(self):
         self.pic_move = True
@@ -280,17 +280,23 @@ class ExpensesTracker():
         self.label1.config(text = self.show_output)
 
     def pie_chart(self, type):
+        self.pic_move = False
+        self.picture.config(image='')
+
         plot.style.use("dark_background")
+        fig = plot.Figure(figsize=(7,5),dpi=100)
+        splot = fig.add_subplot()
         if type == 1:
             self.SpeakText("Opening income graph.")
-            plot.pie(self.incomes[1], labels = self.incomes[0], wedgeprops=dict(width=0.5))
-            plot.title("INCOME GRAPH")
+            splot.pie(self.incomes[1], labels = self.incomes[0], wedgeprops=dict(width=0.5))
         if type == 2:
             self.SpeakText("Opening expenses graph.")
-            plot.pie(self.expenses[1], labels = self.expenses[0], wedgeprops=dict(width=0.5))
-            plot.title("EXPENSE GRAPH")
-        plot.show()
+            splot.pie(self.expenses[1], labels = self.expenses[0], wedgeprops=dict(width=0.5))
 
+        c = FigureCanvasTkAgg(fig,master=self.picture)
+        c.draw()
+        c.get_tk_widget().grid(column=0,row=2)
+    
     def save (self) :
         fexp = open("expnese_file","wb+")
         pickle.dump(self.expenses, fexp)
@@ -310,7 +316,6 @@ class ExpensesTracker():
         fin.close()
 
         
-
 #Main code
 
 root = tk.Tk()
