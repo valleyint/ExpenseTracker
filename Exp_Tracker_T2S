@@ -10,7 +10,8 @@ from PIL import (Image,ImageTk)
 import pyttsx3
 import pickle
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
+import datetime as dt
+import requests
 
 #Class
 
@@ -21,7 +22,7 @@ class ExpensesTracker():
         self.root.title("Expenses Tracker")
         self.root.state("zoomed")
         self.root.config(background = "#2C323A")
-        self.frame2_buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["QUIT", 0]]
+        self.frame2_buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ['STOCKS',0],["QUIT", 0]]
         self.income_or_expense = ""
         self.img = ImageTk.PhotoImage(Image.open("Image1.jpeg").resize((600,400))) 
         self.img2 = ImageTk.PhotoImage(Image.open("Image2.jpeg").resize((600,400))) 
@@ -30,6 +31,7 @@ class ExpensesTracker():
         self.count = 1
         self.engine = pyttsx3.init()
         self.engine.setProperty("rate", 150)
+        self.stocks = stocks('ZS5EIJU8JP6XTXP0')
         self.load()
         self.intro()
 
@@ -127,15 +129,23 @@ class ExpensesTracker():
                 self.income_or_expense = "Expense"
                 self.delete_buttons()
                 self.frame2_buttons = [12, ["↩    BACK  ", 0], ["ADD EXPENSE", 0], ["REMOVE EXPENSE", 0], ["UPDATE EXPENSE", 0], ["GET EXPENSE", 0]]
-            if num == 1 or num == 2:
+            elif num == 3:
+                self.SpeakText("Opening stocks.")
+                self.income_or_expense = "Stock"
+                self.delete_buttons()
+                self.frame2_buttons = [13, ["↩    BACK  ", 0], ["ADD STOCK", 0], ["REMOVE STOCK", 0], ["UPDATE STOCK", 0], ["GET STOCK", 0]]
+            if num == 1 or num == 2 or num == 3:
                 self.create_buttons()
                 self.label1 = tk.Label(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
                 self.label2 = tk.Label(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.label3 = tk.Label(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
                 self.entry1 = tk.Entry(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
                 self.entry2 = tk.Entry(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
+                self.entry3 = tk.Entry(self.frame3, borderwidth=1, relief="solid", width = 20, bg = "#1C1B23", fg = "#F2DFCB")
                 self.button1 = tk.Button(self.frame3, text = "Submit", width = 15, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23")
-                self.make_table()
-            elif num == 3:
+                if num == 1 or num == 2 :
+                    self.make_table()
+            elif num == 4:
                 self.SpeakText("Closing app.")
                 self.save()
                 root.destroy()
@@ -145,21 +155,25 @@ class ExpensesTracker():
             if num == 1:
                 self.SpeakText("Returning to home screen.")
                 self.delete_buttons()
-                self.frame2_buttons = [1, ["INCOME", 0], ["EXPENSE", 0], ["QUIT", 0]]
+                self.frame2_buttons = [1, ["INCOME", 0], ["EXPENSE", 0],["STOCKS",0], ["QUIT", 0]]
                 self.create_buttons()
             elif num == 2:
+                self.label3.grid_forget()
+                self.entry3.grid_forget()
                 self.label1.config(text = f"Enter {self.income_or_expense} name: ")
                 self.label1.grid(row = 0, column = 1)
                 self.label2.config(text = f"Enter {self.income_or_expense} amount: ")
                 self.label2.grid(row = 1, column = 1)
-                self.entry1.grid(row = 0, column = 2, padx = 20)
+                self.entry1.grid(row = 0, column = 2)
                 self.entry2.grid(row = 1, column = 2)
                 self.button1.config(command = self.add)
                 self.button1.grid(row = 2, column = 1)
-                self.frame3.grid_columnconfigure(3, weight=1)
+                self.frame3.grid_columnconfigure(2, weight=1)
                 self.frame3.grid()
 
             elif num == 3:
+                self.label3.grid_forget()
+                self.entry3.grid_forget()
                 self.label2.grid_forget()
                 self.entry2.grid_forget()
                 self.label1.config(text = f"Enter {self.income_or_expense} name: ")
@@ -170,6 +184,8 @@ class ExpensesTracker():
                 self.frame3.grid_columnconfigure(3, weight=1)
                 self.frame3.grid()
             elif num == 4:
+                self.label3.grid_forget()
+                self.entry3.grid_forget()
                 self.label1.config(text = f"Enter {self.income_or_expense} name: ")
                 self.label1.grid(row = 0, column = 1)
                 self.label2.config(text = f"Enter new {self.income_or_expense} amount: ")
@@ -181,6 +197,8 @@ class ExpensesTracker():
                 self.frame3.grid_columnconfigure(3, weight=1)
                 self.frame3.grid()
             elif num == 5:
+                self.label3.grid_forget()
+                self.entry3.grid_forget()
                 self.label2.grid_forget()
                 self.entry2.grid_forget()
                 self.label1.config(text = "Enter income name: ")
@@ -192,7 +210,102 @@ class ExpensesTracker():
                 self.frame3.grid()
             else:
                 pass
-       
+        elif seq == 13 :
+            if num == 1 :
+                self.SpeakText("Returning to home screen.")
+                self.delete_buttons()
+                self.frame2_buttons = [1, ["INCOME", 0], ["EXPENSE", 0],["STOCKS",0], ["QUIT", 0]]
+                self.create_buttons()
+            elif num == 2 :
+                self.label1.config(text = f"Enter {self.income_or_expense} name: ")
+                self.label1.grid(row = 0, column = 1)
+                self.label2.config(text = f"Enter {self.income_or_expense} amount: ")
+                self.label2.grid(row = 1, column = 1)
+                self.label3.config(text= f"Enter {self.income_or_expense} exchange:")
+                self.label3.grid(row = 2, column = 1)
+                self.entry1.grid(row = 0, column = 2)
+                self.entry2.grid(row = 1, column = 2)
+                self.entry3.grid(row = 2, column = 2)
+                self.button1.config(command = self.addstock)
+                self.button1.grid(row = 3, column = 1)
+                self.frame3.grid_columnconfigure(3, weight=1)
+                self.frame3.grid()
+            elif num == 3:
+                self.label3.grid_forget()
+                self.entry3.grid_forget()
+                self.label1.config(text = f"Enter {self.income_or_expense} symbol: ")
+                self.label1.grid(row = 0, column = 1)
+                self.label2.config(text= f"Enter {self.income_or_expense} exchange:")
+                self.label2.grid(row = 1, column = 1)
+                self.entry1.grid(row = 0, column = 2)
+                self.entry2.grid(row=1,column=2)
+                self.button1.config(command = self.removestock)
+                self.button1.grid(row = 2, column = 1)
+                self.frame3.grid_columnconfigure(3, weight=1)
+                self.frame3.grid()
+            elif num == 4:
+                self.label1.config(text = f"Enter {self.income_or_expense} name: ")
+                self.label1.grid(row = 0, column = 1)
+                self.label2.config(text = f"Enter {self.income_or_expense} amount: ")
+                self.label2.grid(row = 1, column = 1)
+                self.label3.config(text= f"Enter {self.income_or_expense} exchange:")
+                self.label3.grid(row = 2, column = 1)
+                self.entry1.grid(row = 0, column = 2)
+                self.entry2.grid(row = 1, column = 2)
+                self.entry3.grid(row = 2, column = 2)
+                self.button1.config(command = self.updatestock)
+                self.button1.grid(row = 3, column = 1)
+                self.frame3.grid_columnconfigure(3, weight=1)
+                self.frame3.grid()
+            elif num == 5:
+                self.label3.grid_forget()
+                self.entry3.grid_forget()
+                self.label1.config(text = "Enter stock name: ")
+                self.label1.grid(row = 0, column = 1)
+                self.entry1.grid(row = 0, column = 2)
+                self.button1.config(command = self.show)
+                self.button1.grid(row = 1, column = 1)
+                self.frame3.grid_columnconfigure(3, weight=1)
+                self.frame3.grid()
+            else:
+                pass
+
+    def addstock (self):
+        symbol = str(self.entry1.get())
+        amount = float(self.entry2.get())
+        exchange = str(self.entry3.get())
+        self.entry1.grid_forget()
+        self.entry1.delete(0, "end")
+        self.entry2.grid_forget()
+        self.entry2.delete(0, "end")
+        self.entry3.grid_forget()
+        self.entry3.delete(0, "end")
+        self.label2.grid_forget()
+        self.label3.grid_forget()
+        self.button1.grid_forget()
+        self.label1.config(text = "Successfully added!")
+        self.stocks.addStock(symbol=symbol,exchange=exchange,count=amount,tm=dt.datetime.now())
+        #self.make_table()
+        self.SpeakText("Successfully added.")
+
+    def updatestock (self):
+        symbol = str(self.entry1.get())
+        amount = float(self.entry2.get())
+        exchange = str(self.entry3.get())
+        self.entry1.grid_forget()
+        self.entry1.delete(0, "end")
+        self.entry2.grid_forget()
+        self.entry2.delete(0, "end")
+        self.entry3.grid_forget()
+        self.entry3.delete(0, "end")
+        self.label2.grid_forget()
+        self.label3.grid_forget()
+        self.button1.grid_forget()
+        self.label1.config(text = "Successfully updated!")
+        self.stocks.update(symbol=symbol,exchange=exchange,count=amount)
+        #self.make_table()
+        self.SpeakText("Successfully updated.")
+
     def add(self):
         name = str(self.entry1.get())
         amount = float(self.entry2.get())
@@ -209,7 +322,7 @@ class ExpensesTracker():
             else:
                 self.incomes[0].append(name)
                 self.incomes[1].append(amount)
-        else:
+        elif self.income_or_expense == "Expense":
             if name in self.expenses[0]:
                 self.expenses[1][self.expenses[0].index(name)] += amount
             else:
@@ -217,6 +330,19 @@ class ExpensesTracker():
                 self.expenses[1].append(amount)
         self.make_table()
         self.SpeakText("Successfully added.")
+
+    def removestock (self) :
+        name = str(self.entry1.get())
+        exchange = str(self.entry3.get())
+        self.entry1.grid_forget()
+        self.entry1.delete(0, "end")
+        self.entry2.grid_forget()
+        self.entry2.delete(0, "end")
+        self.label2.grid_forget()
+        self.button1.grid_forget()
+
+        self.stocks.remove(name,exchange)
+        self.label1.config(text = "Successfully removed!")
 
     def remove(self):
         name = str(self.entry1.get())
@@ -319,7 +445,73 @@ class ExpensesTracker():
         self.incomes = pickle.load(fin)
         fin.close()
 
+
+
+class stocks :
+    def __init__ (self,key):
+        self.api_key = key
+        self.owned = []
         
+    def addStock (self,symbol,exchange:str, count, tm:dt.datetime, note='') :
+        self.owned.append([symbol,count,exchange,tm,note])
+    
+    def remove(self,symbol,exchange) :
+        for loop in range(len(self.owned)) :
+            if self.owned[loop][0] == symbol and self.owned[loop][2] == exchange :
+                self.owned.pop(loop)
+    
+    def update(self,symbol,exchange:str, count) :
+        for loop in range(len(self.owned)) :
+            if self.owned[loop][0] == symbol and self.owned[loop][2] == exchange :
+                self.owned[loop][1] = count
+
+        
+    
+    def unmarshal_csv (self,datastr):
+        arr = [[],[],[],[],[],[]]
+
+        splitdata = datastr.split('\n')
+        for loop in range(1,len(splitdata)-1):
+            r = splitdata[loop].strip('\r')
+            splitrow = r.split(',')
+
+            arr[0].append(dt.datetime.strptime(splitrow[0],'%Y-%m-%d'))
+            for loop1 in range(1,len(splitrow)):
+                arr[loop1].append(float(splitrow[loop1]))
+        return arr
+
+
+    # possible values for timeframe: "month", "day"
+    def getPrice (self,symbol,timeframe:str):
+        sd =[]
+        for loop in self.owned :
+            if loop[0] == symbol:
+                sd = loop
+        
+        ext=''
+        if sd[2] != '' :
+            ext = '.'+sd[2]
+        
+        cmd=''        
+        if timeframe == "day":
+            cmd = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={}&outputsize=compact&datatype=csv&apikey={}'.format(symbol+ext,self.api_key)
+        elif timeframe == "month":
+            cmd = 'https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol={}&outputsize=compact&datatype=csv&apikey={}'.format(symbol+ext,self.api_key)
+        r = requests.get(cmd)
+
+        return self.unmarshal_csv(r.text)
+    
+    def chart (self,arr) :
+        plot.style.use("dark_background")
+        #fig = plot.Figure(figsize=(7,5),dpi=100)
+        #splot = fig.add_subplot()
+        plot.plot(arr[0],arr[1])
+        #c = FigureCanvasTkAgg(fig,master=self.picture)
+        #c.draw()
+        plot.show()
+
+
+
 #Main code
 
 root = tk.Tk()
