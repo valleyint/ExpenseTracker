@@ -48,7 +48,7 @@ class ExpensesTracker():
         self.frame1.grid_columnconfigure(0, weight=1)
         self.entry = tk.Entry(self.root)
         self.frame2.grid(row = 1, column = 0, pady = 30, sticky = "ew")
-        self.frame2.grid_columnconfigure(0, weight=1)
+        self.frame2.grid_columnconfigure(0, weight=0)
         root.grid_columnconfigure(0, weight=1)
         self.create_buttons()
         self.make_page()
@@ -97,11 +97,13 @@ class ExpensesTracker():
                 
     def create_buttons(self):
         self.pic_move = True
+        self.frame2.grid(row = 1, column = 0, pady = 30, sticky = "ew")
+        self.frame2.grid_columnconfigure(0, weight=1)
         for i in range(len(self.frame2_buttons)):
             self.frame2.grid_columnconfigure(i, weight=1)
         for i in range(1, len(self.frame2_buttons)):
             self.frame2_buttons[i][1] = tk.Button(self.frame2, text = self.frame2_buttons[i][0], command = lambda i=i: self.button_command(self.frame2_buttons[0], i), height= 2, width = 16, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23", font = ("Arial", 15))
-            self.frame2_buttons[i][1].grid(row = 0, column = i-1)
+            self.frame2_buttons[i][1].grid(row = 0, column = i-1, padx = 50)
         if self.frame2_buttons[0] == 1:
             self.make_page()
         
@@ -111,6 +113,8 @@ class ExpensesTracker():
         self.pic_move = False
         for widget in self.frame3.winfo_children():
             widget.destroy()
+        self.frame2.grid_forget()
+        
 
     def button_command(self, seq, num):
         if seq == 1:
