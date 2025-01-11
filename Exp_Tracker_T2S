@@ -1,5 +1,6 @@
 #EXPENSES TRACKER
 
+
 #Imports
 
 import tkinter as tk
@@ -9,6 +10,7 @@ from PIL import (Image,ImageTk)
 import pyttsx3
 import pickle
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 
 #Class
 
@@ -65,8 +67,7 @@ class ExpensesTracker():
         else:
             for i in range(len(self.expenses[0])):
                 self.tree.insert("", tk.END, values = (i+1, self.expenses[0][i], self.expenses[1][i]))
-        self.tree.pack(pady=50,padx=50)
-
+        self.tree.grid(pady=50,padx=50, rowspan = 10)
 
     def make_page(self):
         self.graph_label = tk.Label(self.frame3, text = "Graphs", width = 10, font = ("Arial", 24), bg = "#1C1B23", fg = "#F2DFCB", relief = "groove").grid(row = 0, column = 0)
@@ -96,11 +97,11 @@ class ExpensesTracker():
                 
     def create_buttons(self):
         self.pic_move = True
+        for i in range(len(self.frame2_buttons)):
+            self.frame2.grid_columnconfigure(i, weight=1)
         for i in range(1, len(self.frame2_buttons)):
             self.frame2_buttons[i][1] = tk.Button(self.frame2, text = self.frame2_buttons[i][0], command = lambda i=i: self.button_command(self.frame2_buttons[0], i), height= 2, width = 16, bg = "#1C1B23", fg = "#F2DFCB", activebackground = "#F2DFCB", activeforeground = "#1C1B23", font = ("Arial", 15))
             self.frame2_buttons[i][1].grid(row = 0, column = i-1)
-        for i in range(len(self.frame2_buttons)):
-            self.frame2.grid_columnconfigure(i, weight=1)
         if self.frame2_buttons[0] == 1:
             self.make_page()
         
@@ -297,7 +298,7 @@ class ExpensesTracker():
         c.draw()
         c.get_tk_widget().grid(column=0,row=2)
     
-    def save (self) :
+    def save(self) :
         fexp = open("expnese_file","wb+")
         pickle.dump(self.expenses, fexp)
         fexp.close()
@@ -306,7 +307,7 @@ class ExpensesTracker():
         pickle.dump(self.incomes, fin)
         fin.close()
 
-    def load (self) :
+    def load(self) :
         fexp = open("expnese_file","rb+")
         self.expenses = pickle.load(fexp)
         fexp.close()
