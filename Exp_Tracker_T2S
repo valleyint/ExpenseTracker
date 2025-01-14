@@ -42,7 +42,7 @@ class ExpensesTracker():
     def intro(self):
         root.grid_columnconfigure(0, weight=1)
         self.frame1 = tk.Frame(self.root, bg = "#2C323A")
-        self.frame2 = tk.Frame(self.root, bg = "#FFFFFF")
+        self.frame2 = tk.Frame(self.root, bg = "#2C323A")
         self.frame3 = tk.Frame(self.root, bg = "#2C323A")
         self.label_header = tk.Label(self.frame1, text = " EXPENSES TRACKER ", font = ("Arial", 60), relief = "groove", bg = "#3C3B43", fg = "#F2DFCB", image = self.img4)
         self.label_header.grid()
