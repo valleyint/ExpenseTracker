@@ -32,6 +32,7 @@ class ExpensesTracker():
         self.engine = pyttsx3.init()
         self.engine.setProperty("rate", 150)
         self.stocks = stocks('ZS5EIJU8JP6XTXP0')
+        self.created = 0
         self.load()
         self.intro()
 
@@ -55,7 +56,11 @@ class ExpensesTracker():
         self.make_page()
 
     def make_table(self):
+        if self.created == 1:
+            self.tree.destroy()
+            self.created = 0
         self.tree = ttk.Treeview(self.frame3, columns = ("Sl. No.", "Name", "Amount"), show = 'headings')
+        self.created = 1
         self.tree.heading("Sl. No.", text = "Sl. No.",anchor='center')
         self.tree.heading("Name", text = "Name",anchor='center')
         self.tree.heading("Amount", text = "Amount",anchor='center')
@@ -71,13 +76,17 @@ class ExpensesTracker():
         self.tree.grid(pady=50,padx=50, rowspan = 10)
     
     def make_table_stock (self):
+        if self.created == 1:
+            self.tree.destroy()
+            self.created = 0
         self.tree = ttk.Treeview(self.frame3, columns = ("Exchange", "Name", "Amount","price","total"), show = 'headings')
+        self.created = 1
         self.tree.heading("Exchange", text = "Exchange",anchor='center')
         self.tree.heading("Name", text = "Name",anchor='center')
         self.tree.heading("Amount", text = "Amount",anchor='center')
         self.tree.heading("price", text = "Price",anchor='center')
         self.tree.heading("total", text = "Total",anchor='center')
-        self.tree.column("Exchange", width = 50,anchor='center')
+        self.tree.column("Exchange", width = 100,anchor='center')
         self.tree.column("Name", width = 100,anchor='center')
         self.tree.column("Amount", width = 100,anchor='center')
         self.tree.column("price", width = 100,anchor='center')
