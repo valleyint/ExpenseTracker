@@ -33,6 +33,7 @@ class ExpensesTracker():
         self.engine = pyttsx3.init()
         self.engine.setProperty("rate", 150)
         self.stocks = stocks('ZS5EIJU8JP6XTXP0')
+        self.stocks.load()
         self.created = 0
         self.load()
         self.intro()
@@ -176,6 +177,7 @@ class ExpensesTracker():
             elif num == 4:
                 self.SpeakText("Closing app.")
                 self.save()
+                self.stocks.save()
                 root.destroy()
             else:
                 pass
