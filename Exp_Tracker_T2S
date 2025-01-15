@@ -316,8 +316,6 @@ class ExpensesTracker():
         self.label3.grid_forget()
         self.button1.grid_forget()
         self.label1.config(text = "Successfully added!")
-        if symbol in self.stocks.owned :
-            self.stocks.update(symbol,exchange,self.stocks.count(symbol,exchange)+amount)
         self.stocks.addStock(symbol=symbol,exchange=exchange,count=amount,tm=dt.datetime.now())
         self.make_table_stock()
         self.SpeakText("Successfully added.")
@@ -453,8 +451,8 @@ class ExpensesTracker():
         self.button1.grid_forget()
         x = self.stocks.getPrice(name,exchange,"day")
         print(x)
-        self.label1.config(text = "per stock: "+x[1][0])
-        self.label2.config(text= "total: "+self.stocks.count(name,exchange)*x[1][0])
+        self.label1.config(text = "per stock: "+str(x[1][0]))
+        self.label2.config(text= "total: "+str(self.stocks.count(name,exchange)*x[1][0]))
 
     def stock_graph (self) :
         self.pic_move = False
