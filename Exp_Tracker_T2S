@@ -483,7 +483,7 @@ class ExpensesTracker():
         c.get_tk_widget().grid(column=0,row=2)
     
     def save(self) :
-        fexp = open("expnese_file","wb+")
+        fexp = open("expense_file","wb+")
         pickle.dump(self.expenses, fexp)
         fexp.close()
         fin = open("income_file","wb+")
@@ -491,7 +491,7 @@ class ExpensesTracker():
         fin.close()
 
     def load(self) :
-        fexp = open("expnese_file","rb+")
+        fexp = open("expense_file","rb+")
         self.expenses = pickle.load(fexp)
         fexp.close()
         fin = open("income_file","rb+")
